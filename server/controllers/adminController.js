@@ -597,7 +597,7 @@ const testEmail = async (req, res) => {
     res.json({ success: true, message: 'Test email sent.' });
   } catch (err) {
     console.error('Test email error:', err);
-    res.status(500).json({ success: false, message: 'Failed to send test email.' });
+    res.status(500).json({ success: false, message: err.message || 'Failed to send test email.' });
   }
 };
 

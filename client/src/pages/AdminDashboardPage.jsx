@@ -1244,6 +1244,12 @@ export default function AdminDashboardPage() {
                       {settings.filter(s => !s.setting_key.startsWith('page_')).map(s => (
                         <SettingField key={s.setting_key} setting={s} onSave={handleSettingUpdate} />
                       ))}
+                      <div style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid #e2e8f0' }}>
+                        <p style={{ margin: '0 0 10px', fontSize: '13px', color: '#64748b' }}>Test your current SMTP configuration by sending a test email.</p>
+                        <button className="adm-btn secondary" onClick={handleTestEmail} disabled={actionLoading === 'test-email'}>
+                          {actionLoading === 'test-email' ? 'Sending...' : '🧪 Send Test Email'}
+                        </button>
+                      </div>
                     </div>
                   </div>
 

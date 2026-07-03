@@ -54,7 +54,7 @@ const getButtonHtml = (url, text) => `
 /**
  * Send an email safely (fails gracefully if SMTP is not configured)
  */
-const sendEmail = async (to, subject, htmlContent, previewText = '') => {
+const sendEmail = async (to, subject, htmlContent, previewText = '', throwError = false) => {
   try {
     const platformName = await getSetting('platform_name') || 'DonatePlate';
     const cleanSubject = subject.replace(/Donate Fate|DonatePlate/gi, platformName);
@@ -93,6 +93,7 @@ const sendEmail = async (to, subject, htmlContent, previewText = '') => {
     console.log(`Email sent: ${info.messageId}`);
   } catch (error) {
     console.error('Error sending email:', error);
+    if (throwError) throw error;
   }
 };
 
@@ -255,14 +256,15 @@ module.exports = {
   // 5. Test Emails
   sendTestEmail: (email) =>
     sendEmail(
-      email, 
-      'SMTP Test Successful', 
+      email,
+      'Test Email - Donate Fate SMTP Configuration',
       `
-        <h3 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Success! ✉️</h3>
-        <p style="margin: 0 0 16px;">If you are reading this, your SMTP configuration on Donate Fate is working perfectly.</p>
-        <p style="margin: 0 0 16px;">All automated system emails will now be delivered successfully.</p>
+        <h3 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Success! 🎉</h3>
+        <p style="margin: 0 0 16px;">If you are reading this, it means your SMTP configuration for Donate Fate is working perfectly.</p>
+        <p style="margin: 0 0 16px;">You can now safely enable features like Email Verification and send Broadcasts to your users.</p>
       `,
-      'Your SMTP configuration on Donate Fate is working perfectly.'
+      'Your SMTP configuration is working perfectly.',
+      true // throw error if it fails
     ),
 
   // 6. Password Reset
