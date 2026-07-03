@@ -71,6 +71,7 @@ const sendEmail = async (to, subject, htmlContent, previewText = '', throwError 
 
     if (!smtpUser || !smtpPass) {
       console.log(`[EMAIL MOCK] To: ${to} | Subject: ${subject}`);
+      if (throwError) throw new Error('SMTP credentials missing. Check SETTINGS_ENCRYPTION_KEY or SMTP_USER/PASS.');
       return;
     }
 
