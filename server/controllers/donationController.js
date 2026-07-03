@@ -82,8 +82,19 @@ const initiateDonation = async (req, res) => {
     }
 
     const campaign = campResult.rows[0];
-    const donorEmail = req.user ? req.user.email : guest_email;
-    const donorName = req.user ? null : (guest_name || 'Guest Donor');
+    
+    let donorEmail = guest_email;
+    let donorName = guest_name || 'Guest Donor';
+    
+    if (req.user) {
+      const uRes = await pool.query('SELECT name, email FROM users WHERE id = $1', [req.user.id]);
+      if (uRes.rows.length > 0) {
+        donorEmail = uRes.rows[0].email;
+        donorName = uRes.rows[0].name;
+      } else {
+        donorEmail = req.user.email || guest_email;
+      }
+    }
 
     // Calculate platform fee
     const feePercent = parseFloat(await getSetting('platform_fee_percent') || process.env.PLATFORM_FEE_PERCENT || '2.5');
@@ -145,8 +156,8 @@ const initiateDonation = async (req, res) => {
       [
         campaign_id,
         req.user ? req.user.id : null,
-        req.user ? null : donorName,
-        req.user ? null : guest_email,
+        donorName,
+        donorEmail,
         amount,
         platformFee,
         is_anonymous || false,

@@ -697,7 +697,7 @@ const sendPendingDonationReminders = async (req, res) => {
        WHERE d.status = 'pending' 
        AND d.reminder_sent = false
        AND d.guest_email IS NOT NULL
-       AND d.created_at < NOW() - INTERVAL '30 minutes'`
+       AND d.created_at < NOW() - INTERVAL '1 minute'`
     );
 
     const donations = pendingResult.rows;
