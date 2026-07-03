@@ -14,10 +14,10 @@ const getEmailTemplate = (content, previewText = '', platformName = 'DonatePlate
     ${previewText}
   </div>
   
-  <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+  <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border-top: 4px solid #1863dc;">
     
     <!-- Header -->
-    <div style="background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%); padding: 32px 20px; text-align: center;">
+    <div style="background-color: #0f172a; padding: 32px 20px; text-align: center;">
       <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">🍩 ${platformName}</h1>
     </div>
     
@@ -43,7 +43,7 @@ const getButtonHtml = (url, text) => `
   <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 24px; margin-bottom: 24px;">
     <tr>
       <td align="left">
-        <a href="${url}" style="display: inline-block; background-color: #9333ea; color: #ffffff; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
+        <a href="${url}" style="display: inline-block; background-color: #1863dc; color: #ffffff; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 6px -1px rgba(24, 99, 220, 0.2);">
           ${text}
         </a>
       </td>
@@ -151,7 +151,7 @@ module.exports = {
       'Campaign Under Review', 
       `
         <h3 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Campaign Submitted</h3>
-        <p style="margin: 0 0 16px;">Your campaign <strong style="color: #9333ea;">"${title}"</strong> has been successfully submitted!</p>
+        <p style="margin: 0 0 16px;">Your campaign <strong style="color: #1863dc;">"${title}"</strong> has been successfully submitted!</p>
         <p style="margin: 0 0 16px;">It is currently pending review by our administration team to ensure it meets platform guidelines. This process usually takes less than 24 hours.</p>
         <p style="margin: 0 0 16px;">We will notify you the moment it is approved and live.</p>
       `,
@@ -164,7 +164,7 @@ module.exports = {
       'Campaign Approved!', 
       `
         <h3 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Great News! 🎉</h3>
-        <p style="margin: 0 0 16px;">Your campaign <strong style="color: #9333ea;">"${title}"</strong> has been officially approved and is now live on the platform.</p>
+        <p style="margin: 0 0 16px;">Your campaign <strong style="color: #1863dc;">"${title}"</strong> has been officially approved and is now live on the platform.</p>
         <p style="margin: 0 0 16px;">You can now start sharing your campaign link with your network to begin raising funds.</p>
         ${getButtonHtml(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/campaigns/${campaignId}`, 'View Your Campaign')}
       `,
@@ -177,7 +177,7 @@ module.exports = {
       'Campaign Status Update', 
       `
         <h3 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Campaign Update</h3>
-        <p style="margin: 0 0 16px;">Unfortunately, your campaign <strong style="color: #9333ea;">"${title}"</strong> could not be approved at this time as it did not meet our community guidelines.</p>
+        <p style="margin: 0 0 16px;">Unfortunately, your campaign <strong style="color: #1863dc;">"${title}"</strong> could not be approved at this time as it did not meet our community guidelines.</p>
         <p style="margin: 0 0 16px;">Please log in to your dashboard to review the feedback, or contact our support team if you believe this was a mistake.</p>
       `,
       'Important update regarding your recent campaign submission.'
@@ -190,7 +190,7 @@ module.exports = {
       'Donation Receipt - Thank You!', 
       `
         <h3 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Thank You, ${donorName}! 💜</h3>
-        <p style="margin: 0 0 16px;">We successfully processed your donation of <strong style="color: #10b981; font-size: 18px;">$${amount}</strong> to support <strong style="color: #9333ea;">"${campaignTitle}"</strong>.</p>
+        <p style="margin: 0 0 16px;">We successfully processed your donation of <strong style="color: #10b981; font-size: 18px;">$${amount}</strong> to support <strong style="color: #1863dc;">"${campaignTitle}"</strong>.</p>
         <p style="margin: 0 0 16px;">Your generosity is what makes our community so powerful. You can track the impact of your donation at any time using the link below:</p>
         ${getButtonHtml(trackingUrl, 'Track Your Donation')}
       `,
@@ -203,7 +203,7 @@ module.exports = {
       `You just received a $${amount} donation on Donate Fate!`,
       `
         <h3 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Great news, ${creatorName}! 🎉</h3>
-        <p style="margin: 0 0 24px;">Someone just made a donation to your campaign <strong style="color: #9333ea;">"${campaignTitle}"</strong>.</p>
+        <p style="margin: 0 0 24px;">Someone just made a donation to your campaign <strong style="color: #1863dc;">"${campaignTitle}"</strong>.</p>
 
         <div style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border: 1px solid #86efac; border-radius: 12px; padding: 24px; margin: 0 0 24px; text-align: center;">
           <p style="margin: 0 0 4px; font-size: 13px; color: #15803d; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;">Donation Received</p>
@@ -224,7 +224,7 @@ module.exports = {
       'Withdrawal Request Received', 
       `
         <h3 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Payout Requested</h3>
-        <p style="margin: 0 0 16px;">We have received your request to withdraw <strong style="color: #10b981; font-size: 18px;">$${amount}</strong> from your campaign <strong style="color: #9333ea;">"${campaignTitle}"</strong>.</p>
+        <p style="margin: 0 0 16px;">We have received your request to withdraw <strong style="color: #10b981; font-size: 18px;">$${amount}</strong> from your campaign <strong style="color: #1863dc;">"${campaignTitle}"</strong>.</p>
         <p style="margin: 0 0 16px;">Our financial team is reviewing the request. You will receive an email once it is approved and the transfer has been initiated.</p>
       `,
       `We received your request to withdraw $${amount}.`
@@ -236,7 +236,7 @@ module.exports = {
       'Withdrawal Approved!', 
       `
         <h3 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Funds are on the way! 💸</h3>
-        <p style="margin: 0 0 16px;">Your withdrawal request for <strong style="color: #10b981; font-size: 18px;">$${amount}</strong> from <strong style="color: #9333ea;">"${campaignTitle}"</strong> has been approved and processed.</p>
+        <p style="margin: 0 0 16px;">Your withdrawal request for <strong style="color: #10b981; font-size: 18px;">$${amount}</strong> from <strong style="color: #1863dc;">"${campaignTitle}"</strong> has been approved and processed.</p>
         <p style="margin: 0 0 16px;">Please allow 3-5 business days for the funds to reflect in your bank account, depending on your financial institution.</p>
       `,
       `Your withdrawal for $${amount} has been processed and is on the way.`
@@ -248,7 +248,7 @@ module.exports = {
       'Withdrawal Update', 
       `
         <h3 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Withdrawal Request Declined</h3>
-        <p style="margin: 0 0 16px;">Your request to withdraw <strong style="color: #10b981; font-size: 18px;">$${amount}</strong> from <strong style="color: #9333ea;">"${campaignTitle}"</strong> could not be processed at this time.</p>
+        <p style="margin: 0 0 16px;">Your request to withdraw <strong style="color: #10b981; font-size: 18px;">$${amount}</strong> from <strong style="color: #1863dc;">"${campaignTitle}"</strong> could not be processed at this time.</p>
         <p style="margin: 0 0 16px;">Please log in to your dashboard to review your KYC verification status, or reach out to support for more details.</p>
       `,
       'Your recent withdrawal request could not be processed.'
