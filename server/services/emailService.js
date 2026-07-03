@@ -245,13 +245,27 @@ module.exports = {
   sendWithdrawalRejectedEmail: (email, amount, campaignTitle) =>
     sendEmail(
       email, 
-      'Withdrawal Update', 
+      'Withdrawal Request Declined', 
       `
         <h3 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Withdrawal Request Declined</h3>
         <p style="margin: 0 0 16px;">Your request to withdraw <strong style="color: #10b981; font-size: 18px;">$${amount}</strong> from <strong style="color: #1863dc;">"${campaignTitle}"</strong> could not be processed at this time.</p>
         <p style="margin: 0 0 16px;">Please log in to your dashboard to review your KYC verification status, or reach out to support for more details.</p>
       `,
       'Your recent withdrawal request could not be processed.'
+    ),
+
+  // 4b. Pending Donation Reminder
+  sendDonationReminderEmail: (email, name, amount, campaignTitle, campaignUrl) =>
+    sendEmail(
+      email,
+      'Resume your donation',
+      `
+        <h3 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Hi ${name}, we noticed you left something behind!</h3>
+        <p style="margin: 0 0 16px;">You started a donation of <strong style="color: #10b981; font-size: 18px;">$${amount}</strong> for <strong style="color: #1863dc;">"${campaignTitle}"</strong> but didn't finish checking out.</p>
+        <p style="margin: 0 0 16px;">Your support means the world to them. You can resume your donation at any time by visiting the campaign page:</p>
+        ${getButtonHtml(campaignUrl, 'Resume Your Donation')}
+      `,
+      `Resume your $${amount} donation to ${campaignTitle}.`
     ),
 
   // 5. Test Emails

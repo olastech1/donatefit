@@ -118,6 +118,7 @@ export const adminAPI = {
   testEmail: (data) => api.post('/admin/settings/test-email', data),
   getDonations: () => api.get('/admin/donations'),
   verifyPendingDonations: () => api.post('/admin/donations/verify-pending'),
+  sendPendingDonationReminders: () => api.post('/admin/remind-pending-donations'),
   deleteDonation: (id) => api.delete(`/admin/donations/${id}`),
   toggleSeoVisibility: (id) => api.put(`/admin/campaigns/${id}/seo`),
   addFunds: (id, amount) => api.post(`/admin/campaigns/${id}/add-funds`, { amount }),

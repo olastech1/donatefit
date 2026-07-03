@@ -154,6 +154,8 @@ CREATE TABLE donations (
     status                      VARCHAR(20) NOT NULL DEFAULT 'pending'
                                     CHECK (status IN ('pending', 'success', 'failed', 'refunded')),
 
+    reminder_sent               BOOLEAN DEFAULT FALSE,
+
     created_at                  TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 

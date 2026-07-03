@@ -1052,34 +1052,55 @@ export default function AdminDashboardPage() {
               {/* ══ DONATIONS ═══════════════════════════════════ */}
               {tab === 'donations' && (
                 <div className="adm-animate">
-                  {/* Verify banner */}
-                  <div className="adm-card" style={{ marginBottom: '18px', background: 'linear-gradient(135deg, #f0fdf4, #dcfce7)', border: '1px solid #86efac' }}>
-                    <div className="adm-card-body" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-                      <div>
+                  {/* Verify & Remind banners */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px', marginBottom: '18px' }}>
+                    
+                    <div className="adm-card" style={{ background: 'linear-gradient(135deg, #f0fdf4, #dcfce7)', border: '1px solid #86efac', height: '100%' }}>
+                      <div className="adm-card-body" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                         <div style={{ fontWeight: 700, color: '#166534', marginBottom: '2px' }}>🔍 Verify Pending Payments</div>
-                        <div style={{ fontSize: '0.82rem', color: '#15803d' }}>Cross-check Stripe and auto-confirm paid donations.</div>
+                        <div style={{ fontSize: '0.82rem', color: '#15803d', flex: 1 }}>Cross-check Stripe and auto-confirm paid donations.</div>
                         {verifyResult && (
                           <div style={{ marginTop: '8px', display: 'flex', gap: '16px' }}>
-                            <span style={{ color: '#166534', fontWeight: 700, fontSize: '0.85rem' }}>✅ {verifyResult.verified} verified</span>
-                            <span style={{ color: '#dc2626', fontWeight: 700, fontSize: '0.85rem' }}>❌ {verifyResult.failed} failed</span>
+                            <span style={{ color: '#166534', fontWeight: 700, fontSize: '0.85rem' }}>✅ {verifyResult.verified || 0} verified</span>
+                            <span style={{ color: '#dc2626', fontWeight: 700, fontSize: '0.85rem' }}>❌ {verifyResult.failed || 0} failed</span>
                           </div>
                         )}
+                        <button
+                          className="adm-btn success"
+                          style={{ background: '#16a34a', color: '#fff', border: 'none', marginTop: '12px' }}
+                          disabled={verifyLoading || actionLoading === 'remind'}
+                          onClick={async () => {
+                            setVerifyLoading(true); setVerifyResult(null);
+                            try {
+                              const res = await adminAPI.verifyPendingDonations();
+                              setVerifyResult(res.data);
+                              setMessage({ type: 'success', text: res.data.message });
+                              const fresh = await adminAPI.getDonations(); setDonations(fresh.data.data);
+                            } catch (err) { setMessage({ type: 'error', text: err.response?.data?.message || 'Verification failed.' }); }
+                            finally { setVerifyLoading(false); }
+                          }}
+                        >{verifyLoading ? '⏳ Verifying…' : '✅ Verify Now'}</button>
                       </div>
-                      <button
-                        className="adm-btn success"
-                        style={{ background: '#16a34a', color: '#fff', border: 'none' }}
-                        disabled={verifyLoading}
-                        onClick={async () => {
-                          setVerifyLoading(true); setVerifyResult(null);
-                          try {
-                            const res = await adminAPI.verifyPendingDonations();
-                            setVerifyResult(res.data);
-                            setMessage({ type: 'success', text: res.data.message });
-                            const fresh = await adminAPI.getDonations(); setDonations(fresh.data.data);
-                          } catch (err) { setMessage({ type: 'error', text: err.response?.data?.message || 'Verification failed.' }); }
-                          finally { setVerifyLoading(false); }
-                        }}
-                      >{verifyLoading ? '⏳ Verifying…' : '✅ Verify Now'}</button>
+                    </div>
+
+                    <div className="adm-card" style={{ background: 'linear-gradient(135deg, #eff6ff, #dbeafe)', border: '1px solid #93c5fd', height: '100%' }}>
+                      <div className="adm-card-body" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                        <div style={{ fontWeight: 700, color: '#1e3a8a', marginBottom: '2px' }}>📧 Remind Pending Donors</div>
+                        <div style={{ fontSize: '0.82rem', color: '#1d4ed8', flex: 1 }}>Send email reminders to users who started but didn't complete a donation.</div>
+                        <button
+                          className="adm-btn primary"
+                          style={{ background: '#2563eb', color: '#fff', border: 'none', marginTop: '12px' }}
+                          disabled={actionLoading === 'remind' || verifyLoading}
+                          onClick={async () => {
+                            setActionLoading('remind');
+                            try {
+                              const res = await adminAPI.sendPendingDonationReminders();
+                              setMessage({ type: 'success', text: res.data.message });
+                            } catch (err) { setMessage({ type: 'error', text: err.response?.data?.message || 'Failed to send reminders.' }); }
+                            finally { setActionLoading(''); }
+                          }}
+                        >{actionLoading === 'remind' ? '⏳ Sending…' : '📨 Send Reminders'}</button>
+                      </div>
                     </div>
                   </div>
 

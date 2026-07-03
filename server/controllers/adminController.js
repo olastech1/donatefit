@@ -682,6 +682,91 @@ const verifyPendingDonations = async (req, res) => {
 };
 
 /**
+ * POST /api/admin/remind-pending-donations
+ * Finds all pending donations that have not had a reminder sent yet.
+ * Verifies with Stripe they are still unpaid.
+ * Sends a reminder email and marks reminder_sent = true.
+ */
+const sendPendingDonationReminders = async (req, res) => {
+  try {
+    // Find donations older than 30 mins that are still pending and haven't been reminded
+    const pendingResult = await pool.query(
+      `SELECT d.*, c.title as campaign_title 
+       FROM donations d
+       JOIN campaigns c ON d.campaign_id = c.id
+       WHERE d.status = 'pending' 
+       AND d.reminder_sent = false
+       AND d.guest_email IS NOT NULL
+       AND d.created_at < NOW() - INTERVAL '30 minutes'`
+    );
+
+    const donations = pendingResult.rows;
+    if (donations.length === 0) {
+      return res.json({ success: true, message: 'No eligible pending donations to remind.' });
+    }
+
+    const stripeSecretKey = await getStripeSecretKey();
+    if (!stripeSecretKey) {
+      return res.status(400).json({ success: false, message: 'Stripe secret key not configured.' });
+    }
+
+    const stripe = require('stripe')(stripeSecretKey);
+    let remindedCount = 0;
+    let fixedCount = 0;
+
+    for (let d of donations) {
+      if (!d.stripe_checkout_session_id) continue;
+
+      try {
+        const session = await stripe.checkout.sessions.retrieve(d.stripe_checkout_session_id);
+        
+        if (session.payment_status === 'paid') {
+          // It was paid but the webhook was missed! Fix it.
+          const updateRes = await pool.query(
+            `UPDATE donations SET status = 'success', stripe_payment_intent_id = $1 WHERE id = $2 AND status = 'pending' RETURNING *`,
+            [session.payment_intent, d.id]
+          );
+          if (updateRes.rows.length > 0) {
+            await emailService.sendDonationReceiptEmail(
+              d.guest_email, 
+              d.guest_name || 'A generous donor', 
+              d.amount, 
+              d.campaign_title, 
+              `${process.env.FRONTEND_URL || 'http://localhost:5173'}/track/${d.stripe_checkout_session_id}`
+            ).catch(console.error);
+            fixedCount++;
+          }
+        } else {
+          // Still unpaid. Send the reminder!
+          const campaignUrl = `${process.env.FRONTEND_URL || 'https://donatefate.com'}/campaigns/${d.campaign_id}`;
+          await emailService.sendDonationReminderEmail(
+            d.guest_email,
+            d.guest_name || 'Donor',
+            d.amount,
+            d.campaign_title,
+            campaignUrl
+          );
+
+          // Mark as reminded
+          await pool.query('UPDATE donations SET reminder_sent = true WHERE id = $1', [d.id]);
+          remindedCount++;
+        }
+      } catch (stripeErr) {
+        console.error(`Failed to process session ${d.stripe_checkout_session_id}:`, stripeErr.message);
+      }
+    }
+
+    res.json({ 
+      success: true, 
+      message: `Sent ${remindedCount} reminders. (Auto-fixed ${fixedCount} missing payments)` 
+    });
+  } catch (err) {
+    console.error('Remind pending donations error:', err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+/**
  * POST /api/admin/campaigns/:id/add-funds
  * Allows an admin to add mock/manual funds to a campaign's balance.
  * Inserts a success donation record set in the past so that it is immediately available to withdraw.
@@ -1074,6 +1159,7 @@ module.exports = {
   getSettings, updateSetting, getStripeStatus, testEmail,
   updateAdminProfile,
   verifyPendingDonations,
+  sendPendingDonationReminders,
   addFundsToCampaign,
   addUserFunds: addFundsToUser,
   addFundsToUser,
