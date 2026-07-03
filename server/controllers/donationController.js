@@ -7,6 +7,44 @@ const { v4: uuidv4 } = require('uuid');
 const emailService = require('../services/emailService');
 
 /**
+ * Helper to process emails after a successful donation
+ */
+const processDonationEmails = async (campaign_id, donationAmount, is_anonymous, donor_name, donor_email, session_id) => {
+  try {
+    const camp = await pool.query('SELECT title FROM campaigns WHERE id = $1', [campaign_id]);
+    if (camp.rows.length === 0) return;
+
+    const campaignTitle = camp.rows[0].title;
+    const trackingUrl = `${process.env.FRONTEND_URL || 'https://donatefate.com'}/track/${session_id}`;
+    const donorDisplayName = is_anonymous ? 'An anonymous donor' : (donor_name || 'A generous donor');
+
+    // 1. Receipt to donor
+    if (donor_email) {
+      await emailService.sendDonationReceiptEmail(donor_email, donorDisplayName, donationAmount, campaignTitle, trackingUrl).catch(console.error);
+    }
+
+    // 2. Alert to campaign creator
+    const creator = await pool.query(
+      `SELECT u.email, u.name FROM users u
+       JOIN campaigns c ON c.creator_id = u.id
+       WHERE c.id = $1`,
+      [campaign_id]
+    );
+    if (creator.rows.length > 0) {
+      await emailService.sendDonationAlertEmail(
+        creator.rows[0].email,
+        creator.rows[0].name,
+        donorDisplayName,
+        donationAmount,
+        campaignTitle
+      ).catch(console.error);
+    }
+  } catch (err) {
+    console.error('Error sending donation emails:', err);
+  }
+};
+
+/**
  * POST /api/donations/initiate
  * Creates a Stripe Checkout Session and returns the URL.
  * Works for both guests and registered users.
@@ -197,38 +235,8 @@ const stripeWebhook = async (req, res) => {
 
       // The DB trigger automatically updates campaigns.current_amount
 
-      // Fetch campaign info for emails
-      const camp = await pool.query('SELECT title FROM campaigns WHERE id = $1', [campaign_id]);
-
       // Send emails
-      if (camp.rows.length > 0) {
-        const campaignTitle = camp.rows[0].title;
-        const campaignUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/campaigns/${campaign_id}`;
-        const donorDisplayName = is_anonymous === 'true' ? 'An anonymous donor' : (donor_name || 'A generous donor');
-        const donationAmount = session.amount_total / 100;
-
-        // 1. Receipt to donor
-        if (donor_email) {
-          await emailService.sendDonationReceiptEmail(donor_email, donorDisplayName, donationAmount, campaignTitle, campaignUrl);
-        }
-
-        // 2. Alert to campaign creator
-        const creator = await pool.query(
-          `SELECT u.email, u.name FROM users u
-           JOIN campaigns c ON c.creator_id = u.id
-           WHERE c.id = $1`,
-          [campaign_id]
-        );
-        if (creator.rows.length > 0) {
-          await emailService.sendDonationAlertEmail(
-            creator.rows[0].email,
-            creator.rows[0].name,
-            donorDisplayName,
-            donationAmount,
-            campaignTitle
-          );
-        }
-      }
+      await processDonationEmails(campaign_id, session.amount_total / 100, is_anonymous === 'true', donor_name, donor_email, session.id);
     }
 
 
@@ -424,11 +432,17 @@ const donationCallback = async (req, res) => {
           const session = await stripe.checkout.sessions.retrieve(session_id);
           
           if (session.payment_status === 'paid') {
-            await pool.query(
-              `UPDATE donations SET status = 'success', stripe_payment_intent_id = $1 WHERE stripe_checkout_session_id = $2`,
+            const updateRes = await pool.query(
+              `UPDATE donations SET status = 'success', stripe_payment_intent_id = $1 WHERE stripe_checkout_session_id = $2 AND status = 'pending' RETURNING *`,
               [session.payment_intent, session_id]
             );
             status = 'success';
+            
+            // If we actually changed the status, send the emails now (webhook was missed)
+            if (updateRes.rows.length > 0) {
+              const d = updateRes.rows[0];
+              await processDonationEmails(d.campaign_id, d.amount, d.is_anonymous, d.guest_name, d.guest_email, session_id);
+            }
           }
         }
       } catch (err) {
