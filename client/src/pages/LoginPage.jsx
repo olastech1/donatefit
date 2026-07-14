@@ -7,7 +7,7 @@ import { FiMail, FiLock, FiAlertCircle, FiCheckCircle } from 'react-icons/fi';
 
 export default function LoginPage() {
   const { platformSettings } = useSettings();
-  const platformName = platformSettings?.platform_name || 'DonatePlate';
+  const platformName = platformSettings?.platform_name || 'DonateFit';
   const { login } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');

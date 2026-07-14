@@ -4,7 +4,7 @@ import { useSettings } from '../context/SettingsContext';
 
 export default function AboutPage() {
   const { platformSettings } = useSettings();
-  const platformName = platformSettings?.platform_name || 'DonatePlate';
+  const platformName = platformSettings?.platform_name || 'DonateFit';
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(true);
 

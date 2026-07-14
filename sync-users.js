@@ -9,7 +9,7 @@ const oldUsers = [
   {
     id: '872a2200-f01e-450e-8b9a-4f5b765b005f',
     name: 'admin',
-    email: 'admin@donateplate.com',
+    email: 'admin@donatefit.com',
     password_hash: '$2b$12$TK7IuOkg1n0agoXSfsU7qeNuE.q6tRPTGwESdn5z.eucF6wz5AaH6',
     role: 'admin',
     email_verified: true

@@ -28,7 +28,7 @@ const pct = (cur, goal) => Math.min(100, ((cur / goal) * 100) || 0).toFixed(0);
 
 export default function DashboardPage() {
   const { platformSettings } = useSettings();
-  const platformName = platformSettings?.platform_name || 'DonatePlate';
+  const platformName = platformSettings?.platform_name || 'DonateFit';
   const { user, logout, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -575,7 +575,7 @@ export default function DashboardPage() {
             <>
               <div className="alert alert-info" style={{ marginBottom: 24, display: 'flex', alignItems: 'center', gap: 12 }}>
                 <FiAlertCircle size={20} />
-                <span>Contact <strong>support@donateplate.com</strong> for manual payouts. Automated payouts coming soon.</span>
+                <span>Contact <strong>support@donatefit.com</strong> for manual payouts. Automated payouts coming soon.</span>
               </div>
               <div className="dash-table-wrap">
                 <table className="dash-table">

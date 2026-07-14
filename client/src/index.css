@@ -2,29 +2,29 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap');
 
 /* ============================================================
-   DONATEPLATE — Design System v3.0
-   "Serve Generosity" — Vibrant & Dynamic
+   DONATEFIT — Design System v4.0
+   "Fuel Every Goal" — Energetic & Bold
    ============================================================ */
 
 :root {
-  /* Primary — Royal Blue (Action, Tech, Trust) */
-  --coral-700: #00458a; --coral-600: #0056a7; --coral-500: #1863dc; --coral-400: #4285F4;
-  --coral-300: #8ab4f8; --coral-200: #c2d7fa; --coral-100: #e8f0fe; --coral-50: #f4f8ff;
+  /* Primary — Electric Green (Energy, Fitness, Go) */
+  --coral-700: #004D25; --coral-600: #00873E; --coral-500: #00C853; --coral-400: #00E676;
+  --coral-300: #B9F6CA; --coral-200: #E8F5E9; --coral-100: #E8F5E9; --coral-50: #F1F8E9;
   
-  /* Secondary — Forest Green */
-  --amber-700: #0f3f24; --amber-600: #185633; --amber-500: #227546; --amber-400: #34a853;
-  --amber-300: #81c995; --amber-200: #ceead6; --amber-100: #e6f4ea; --amber-50: #f2f9f4;
+  /* Secondary — Vibrant Orange (Warmth, Action, Drive) */
+  --amber-700: #BF360C; --amber-600: #E64A19; --amber-500: #FF6D00; --amber-400: #FF9100;
+  --amber-300: #FFB74D; --amber-200: #FFE0B2; --amber-100: #FFE0B2; --amber-50: #FFF3E0;
   
-  /* Accent — Soft Gold/Yellow */
-  --teal-700: #b07c00; --teal-600: #d49800; --teal-500: #f5b400; --teal-400: #fcd53f;
-  --teal-300: #fde293; --teal-200: #fef0c2; --teal-100: #fef7e0; --teal-50: #fffdf5;
+  /* Accent — Energy Yellow (Highlight, Motivation, Power) */
+  --teal-700: #F57F17; --teal-600: #F9A825; --teal-500: #FFD600; --teal-400: #FFEA00;
+  --teal-300: #FFF176; --teal-200: #FFF9C4; --teal-100: #FFF9C4; --teal-50: #FFFDE7;
   
   /* Deep Mystic Purple (for secondary accents, muted) */
   --purple-600: #4e4b66; --purple-500: #6b6985; --purple-400: #8b88a8; --purple-100: #e8e7f0; --purple-50: #f7f7fb;
   
   /* Extra accent aliases */
   --pink-400: #f4b4c4; --pink-500: #e6738b;
-  --emerald-600: #185633; --emerald-500: #227546;
+  --emerald-600: #E64A19; --emerald-500: #FF6D00;
   --rose-500: #d93025;
   
   /* Neutrals (Light Scale) */
@@ -49,32 +49,32 @@
   --text-inverse: #ffffff;
   
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #1863dc 0%, #185633 100%);
-  --gradient-warm: linear-gradient(135deg, #1863dc 0%, #0056a7 100%);
-  --gradient-cool: linear-gradient(135deg, #185633 0%, #227546 100%);
+  --gradient-primary: linear-gradient(135deg, #00C853 0%, #00BFA5 100%);
+  --gradient-warm: linear-gradient(135deg, #FF6D00 0%, #FF3D00 100%);
+  --gradient-cool: linear-gradient(135deg, #00C853 0%, #76FF03 100%);
   --gradient-hero: linear-gradient(135deg, #f9f9fa 0%, #ffffff 50%, #f4f4f4 100%);
-  --gradient-sunset: linear-gradient(135deg, #1863dc 0%, #185633 100%);
-  --gradient-mesh: radial-gradient(at 40% 20%, rgba(24,99,220,0.05) 0, transparent 50%), 
-                   radial-gradient(at 80% 0%, rgba(24,86,51,0.05) 0, transparent 50%), 
-                   radial-gradient(at 0% 50%, rgba(24,99,220,0.03) 0, transparent 50%);
-  --gradient-card-hover: linear-gradient(135deg, rgba(24,99,220,0.02) 0%, rgba(24,86,51,0.02) 100%);
+  --gradient-sunset: linear-gradient(135deg, #00C853 0%, #FF6D00 100%);
+  --gradient-mesh: radial-gradient(at 40% 20%, rgba(0,200,83,0.05) 0, transparent 50%), 
+                   radial-gradient(at 80% 0%, rgba(255,109,0,0.05) 0, transparent 50%), 
+                   radial-gradient(at 0% 50%, rgba(0,200,83,0.03) 0, transparent 50%);
+  --gradient-card-hover: linear-gradient(135deg, rgba(0,200,83,0.02) 0%, rgba(255,109,0,0.02) 100%);
   
   /* Action */
-  --accent: #1863dc; --accent-hover: #0056a7; --accent-light: rgba(24, 99, 220, 0.1);
-  --accent-gradient: linear-gradient(135deg, #1863dc 0%, #0056a7 100%);
-  --accent-glow: 0 0 24px rgba(24, 99, 220, 0.15);
+  --accent: #00C853; --accent-hover: #00E676; --accent-light: rgba(0, 200, 83, 0.1);
+  --accent-gradient: linear-gradient(135deg, #00C853 0%, #00BFA5 100%);
+  --accent-glow: 0 0 24px rgba(0, 200, 83, 0.15);
   
   /* Semantic */
-  --success: #185633; --success-bg: #e6f4ea; 
-  --warning: #f5b400; --warning-bg: #fef7e0;
+  --success: #00C853; --success-bg: #E8F5E9; 
+  --warning: #FF6D00; --warning-bg: #FFF3E0;
   --danger: #d93025; --danger-bg: #fce8e6;
-  --progress-gradient: linear-gradient(90deg, #1863dc 0%, #185633 100%);
+  --progress-gradient: linear-gradient(90deg, #00C853 0%, #76FF03 100%);
   
   /* Layout & Borders */
   --border: #ebebeb; 
   --border-light: #f4f4f4; 
   --border-hover: #b2b0b0; 
-  --border-accent: #1863dc;
+  --border-accent: #00C853;
   --radius-xs: 6px; --radius-sm: 10px; --radius-md: 14px; --radius-lg: 20px; --radius-xl: 28px; --radius-full: 9999px;
   --nav-height: 72px;
   
@@ -1871,8 +1871,8 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); font-weight: 700; lin
 .adm-badge.failed  { background: #fef2f2; color: #dc2626; }
 .adm-badge.verified { background: #eff6ff; color: #2563eb; }
 .adm-badge.user    { background: #f8fafc; color: #475569; }
-.adm-badge.creator { background: #fdf2f8; color: #4F46E5; }
-.adm-badge.admin   { background: linear-gradient(135deg, #6366F1, #F59E0B); color: #fff; }
+.adm-badge.creator { background: #E8F5E9; color: #00873E; }
+.adm-badge.admin   { background: linear-gradient(135deg, #00C853, #FF6D00); color: #fff; }
 .adm-badge.banned  { background: #fef2f2; color: #dc2626; border: 1px solid #fca5a5; }
 .adm-badge.cancelled { background: #fef2f2; color: #991b1b; }
 

@@ -1,7 +1,7 @@
 {
-  "name": "donatefate-server",
+  "name": "donatefit-server",
   "version": "1.0.0",
-  "description": "Backend API for Donate Fate crowdfunding platform",
+  "description": "Backend API for DonateFit fitness crowdfunding platform",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",

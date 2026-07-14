@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const dir = '/Users/olastrch/Documents/Mobile App/donateplate/client/src/pages';
+const dir = '/Users/olastrch/Documents/Mobile App/donatefit/client/src/pages';
 const files = ['ContactPage.jsx', 'PrivacyPage.jsx', 'RefundPolicyPage.jsx', 'TermsPage.jsx'];
 
 for (const file of files) {
@@ -21,12 +21,12 @@ for (const file of files) {
   if (componentMatch && !content.includes('const { platformSettings }')) {
     content = content.replace(
       componentMatch[0],
-      `${componentMatch[0]}  const { platformSettings } = useSettings();\n  const platformName = platformSettings?.platform_name || 'DonatePlate';\n`
+      `${componentMatch[0]}  const { platformSettings } = useSettings();\n  const platformName = platformSettings?.platform_name || 'DonateFit';\n`
     );
   }
 
-  // Replace DonatePlate in the defaultContent
-  content = content.replace(/DonatePlate/g, '${platformName}');
+  // Replace DonateFit in the defaultContent
+  content = content.replace(/DonateFit/g, '${platformName}');
   
   // Also fix the emails in ContactPage
   content = content.replace(/support@\$\{platformName\}\.com/g, 'support@${platformName.replace(/\\s+/g, "").toLowerCase()}.com');

@@ -56,7 +56,7 @@ const campaigns = [
 
 async function run() {
   try {
-    const userRes = await pool.query("SELECT id FROM users WHERE email = 'admin@donateplate.com' LIMIT 1");
+    const userRes = await pool.query("SELECT id FROM users WHERE email = 'admin@donatefit.com' LIMIT 1");
     if (userRes.rows.length === 0) {
       console.log("Admin user not found, aborting.");
       return;

@@ -5,7 +5,7 @@ import { FiTwitter, FiInstagram, FiLinkedin, FiGithub, FiHeart, FiShield, FiLock
 
 export default function Footer() {
   const { platformSettings } = useSettings();
-  const platformName = platformSettings?.platform_name || 'DonatePlate';
+  const platformName = platformSettings?.platform_name || 'DonateFit';
   const year = new Date().getFullYear();
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -21,10 +21,10 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="footer-brand">
             <Link to="/" className="footer-logo">
-              <span style={{ fontSize: '1.2em', marginRight: '6px' }}>🍩</span>
+              <span style={{ fontSize: '1.2em', marginRight: '6px' }}>💪</span>
               <span className="gradient-text">{platformName}</span>
             </Link>
-            <p>Serve generosity. A vibrant crowdfunding platform where every campaign is verified and every donation is tracked transparently.</p>
+            <p>Fuel Every Goal. A vibrant crowdfunding platform empowering fitness dreams worldwide.</p>
             
             <div className="footer-social">
               <a href="#" aria-label="Twitter"><FiTwitter /></a>

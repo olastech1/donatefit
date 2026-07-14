@@ -1,11 +1,11 @@
 -- ============================================================
--- DONATE FATE — Seed Data (Stripe Edition)
+-- DONATEFIT — Seed Data (Stripe Edition)
 -- Run AFTER schema.sql
 -- ============================================================
 
 -- 1. Admin user (password: "admin123" — replace hash with real bcrypt)
 INSERT INTO users (id, name, email, password_hash, role, kyc_status) VALUES
-    ('a0000000-0000-0000-0000-000000000001', 'Platform Admin', 'admin@donatefate.com',
+    ('a0000000-0000-0000-0000-000000000001', 'Platform Admin', 'admin@donatefit.com',
      '$2b$12$PLACEHOLDER_REPLACE_WITH_BCRYPT', 'admin', 'verified');
 
 -- 2. Campaign Creators

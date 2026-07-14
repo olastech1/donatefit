@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const dir = '/Users/olastrch/Documents/Mobile App/donateplate/client/src/pages';
+const dir = '/Users/olastrch/Documents/Mobile App/donatefit/client/src/pages';
 const files = ['AdminDashboardPage.jsx', 'DashboardPage.jsx', 'LoginPage.jsx', 'RegisterPage.jsx'];
 
 for (const file of files) {
@@ -21,13 +21,13 @@ for (const file of files) {
   if (componentMatch && !content.includes('const { platformSettings }')) {
     content = content.replace(
       componentMatch[0],
-      `${componentMatch[0]}  const { platformSettings } = useSettings();\n  const platformName = platformSettings?.platform_name || 'DonatePlate';\n`
+      `${componentMatch[0]}  const { platformSettings } = useSettings();\n  const platformName = platformSettings?.platform_name || 'DonateFit';\n`
     );
   }
 
-  // Replace DonatePlate text nodes with {platformName}
-  content = content.replace(/>DonatePlate</g, '>{platformName}<');
-  content = content.replace(/ DonatePlate/g, ' {platformName}');
+  // Replace DonateFit text nodes with {platformName}
+  content = content.replace(/>DonateFit</g, '>{platformName}<');
+  content = content.replace(/ DonateFit/g, ' {platformName}');
   
   fs.writeFileSync(p, content);
   console.log('Fixed', file);

@@ -1,5 +1,5 @@
 // ============================================================
-// DONATEFATE — Express Server (Stripe + Neon Edition)
+// DONATEFIT — Express Server (Stripe + Neon Edition)
 // ============================================================
 require('dotenv').config();
 const express = require('express');
@@ -34,11 +34,11 @@ app.use(cors({
       process.env.FRONTEND_URL || 'http://localhost:3000',
       'http://localhost:3000',
       'http://localhost:5173',
-      'https://donatefate.com',
-      'https://www.donatefate.com'
+      'https://donatefit.com',
+      'https://www.donatefit.com'
     ];
     // Allow requests with no origin (mobile apps, Postman, webhooks)
-    if (!origin || allowedOrigins.some(o => origin.startsWith(o)) || origin.endsWith('.vercel.app') || origin.includes('donatefate')) {
+    if (!origin || allowedOrigins.some(o => origin.startsWith(o)) || origin.endsWith('.vercel.app') || origin.includes('donatefit')) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS: ' + origin));
@@ -83,7 +83,7 @@ app.use('/api/recurring', recurringRoutes);
 app.get('/api/health', (req, res) => {
   res.json({
     success: true,
-    message: 'DonateFate API is running.',
+    message: 'DonateFit API is running.',
     stack: 'Stripe + Neon PSQL',
     timestamp: new Date().toISOString()
   });
@@ -125,7 +125,7 @@ app.use((err, req, res, next) => {
 // ============================================================
 if (!process.env.VERCEL) {
   app.listen(PORT, () => {
-    console.log(`\n🍽️  DonateFate API running on port ${PORT}`);
+    console.log(`\n💪  DonateFit API running on port ${PORT}`);
     console.log(`📡 Health check: http://localhost:${PORT}/api/health`);
     console.log(`💳 Payment: Stripe Checkout`);
     console.log(`🗄️  Database: Neon PSQL\n`);

@@ -96,7 +96,7 @@ function SettingField({ setting, onSave }) {
 // ── Main Component ───────────────────────────────────────────
 export default function AdminDashboardPage() {
   const { platformSettings } = useSettings();
-  const platformName = platformSettings?.platform_name || 'DonatePlate';
+  const platformName = platformSettings?.platform_name || 'DonateFit';
   const { user } = useAuth();
   const navigate  = useNavigate();
 

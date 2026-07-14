@@ -15,7 +15,7 @@ const processDonationEmails = async (campaign_id, donationAmount, is_anonymous, 
     if (camp.rows.length === 0) return;
 
     const campaignTitle = camp.rows[0].title;
-    const trackingUrl = `${process.env.FRONTEND_URL || 'https://donatefate.com'}/track/${session_id}`;
+    const trackingUrl = `${process.env.FRONTEND_URL || 'https://donatefit.com'}/track/${session_id}`;
     const donorDisplayName = is_anonymous ? 'An anonymous donor' : (donor_name || 'A generous donor');
 
     // 1. Receipt to donor
@@ -129,7 +129,7 @@ const initiateDonation = async (req, res) => {
           currency: 'usd',
           product_data: {
             name: `Donate to: ${campaign.title}`,
-            description: `Supporting "${campaign.title}" on Donate Fate`
+            description: `Supporting "${campaign.title}" on DonateFit`
           },
           unit_amount: Math.round(parseFloat(amount) * 100)
         },

@@ -51,10 +51,10 @@ export default function Home() {
           </div>
           <h1 className="animate-in" style={{ animationDelay: '0.2s' }}>
             Empower communities with <br />
-            <span className="gradient-text">every plate shared.</span>
+            <span className="gradient-text">every goal reached.</span>
           </h1>
           <p className="hero-subtitle animate-in" style={{ animationDelay: '0.3s' }}>
-            DonateFate is a vibrant crowdfunding platform built on transparency. 
+            DonateFit is a vibrant crowdfunding platform empowering fitness dreams built on transparency. 
             Discover verified campaigns, set up recurring donations, and track exactly how your generosity creates impact.
           </p>
           <div className="hero-actions animate-in" style={{ animationDelay: '0.4s' }}>
@@ -163,7 +163,7 @@ export default function Home() {
       <section className="section" style={{ background: 'var(--bg-card)' }}>
         <div className="container">
           <div className="section-header">
-            <h2>Why DonateFate?</h2>
+            <h2>Why DonateFit?</h2>
             <p>We've built a platform that puts trust, transparency, and connection at the forefront of crowdfunding.</p>
           </div>
 
@@ -202,9 +202,9 @@ export default function Home() {
       {/* CTA Section */}
       <section style={{ padding: '100px 0', textAlign: 'center', background: 'var(--gradient-sunset)', color: '#fff' }}>
         <div className="container">
-          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '2.5rem', fontWeight: 800, marginBottom: '20px', color: '#fff' }}>Ready to Serve Generosity?</h2>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '2.5rem', fontWeight: 800, marginBottom: '20px', color: '#fff' }}>Ready to Fuel a Goal?</h2>
           <p style={{ fontSize: '1.1rem', opacity: 0.9, maxWidth: '600px', margin: '0 auto 32px' }}>
-            Join thousands of donors and creators making a difference every day on DonateFate.
+            Join thousands of donors and creators making a difference every day on DonateFit.
           </p>
           <div className="flex-center gap-2">
             <Link to="/register" className="btn btn-xl btn-primary" style={{ background: '#fff', color: 'var(--slate-900)', border: 'none' }}>

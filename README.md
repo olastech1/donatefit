@@ -1,11 +1,11 @@
-# Donate Fate
+# DonateFit
 
-A modern crowdfunding donation platform built with React, Node.js/Express, Stripe, and Neon PostgreSQL.
+A modern fitness crowdfunding platform built with React, Node.js/Express, Stripe, and Neon PostgreSQL.
 
 ## Architecture
 
 ```
-donate-plea/
+donatefit/
 ├── database/          # Neon PSQL schema & seed scripts
 │   ├── schema.sql     # Tables, indexes, triggers, platform_settings
 │   └── seed.sql       # Development test data
@@ -29,8 +29,8 @@ donate-plea/
 
 ```bash
 # 1. Clone & install
-git clone https://github.com/olastech1/donation.git
-cd donation
+git clone https://github.com/olastech1/donatefit.git
+cd donatefit
 
 # 2. Set up environment
 cp server/.env.example server/.env
@@ -57,7 +57,7 @@ cd client && npm install && npm run dev
 ## Tech Stack
 
 | Layer | Technology |
-|-------|-----------|
+|-------|------------|
 | Frontend | React 18, Vite, React Router 6 |
 | Backend | Node.js, Express.js |
 | Database | PostgreSQL on Neon (serverless) |

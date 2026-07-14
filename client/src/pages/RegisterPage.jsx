@@ -7,7 +7,7 @@ import { FiMail, FiLock, FiUser, FiAlertCircle, FiCheckCircle, FiInbox, FiHeart 
 
 export default function RegisterPage() {
   const { platformSettings } = useSettings();
-  const platformName = platformSettings?.platform_name || 'DonatePlate';
+  const platformName = platformSettings?.platform_name || 'DonateFit';
   const { register } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
