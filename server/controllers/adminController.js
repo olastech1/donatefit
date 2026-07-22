@@ -738,7 +738,7 @@ const sendPendingDonationReminders = async (req, res) => {
           }
         } else {
           // Still unpaid. Send the reminder!
-          const campaignUrl = `${process.env.FRONTEND_URL || 'https://donatefit.com'}/campaigns/${d.campaign_id}`;
+          const campaignUrl = `${process.env.FRONTEND_URL || 'https://altruwave.com'}/campaigns/${d.campaign_id}`;
           await emailService.sendDonationReminderEmail(
             d.guest_email,
             d.guest_name || 'Donor',
@@ -795,7 +795,7 @@ const addFundsToCampaign = async (req, res) => {
     // Insert donation record in the past (e.g. 2 months ago) to ensure it is immediately available for withdrawal
     const result = await pool.query(
       `INSERT INTO donations (campaign_id, amount, guest_name, guest_email, status, stripe_checkout_session_id, stripe_payment_intent_id, created_at)
-       VALUES ($1, $2, 'Platform Adjustment', 'admin@donatefit.com', 'success', $3, $4, NOW() - INTERVAL '2 months')
+       VALUES ($1, $2, 'Platform Adjustment', 'admin@altruwave.com', 'success', $3, $4, NOW() - INTERVAL '2 months')
        RETURNING id, amount, created_at`,
       [id, parsedAmount, mockSessionId, mockIntentId]
     );
@@ -876,7 +876,7 @@ const addFundsToUser = async (req, res) => {
     // Insert successful donation record in the past (2 months ago) to ensure it is immediately available
     await pool.query(
       `INSERT INTO donations (campaign_id, amount, guest_name, guest_email, status, stripe_checkout_session_id, stripe_payment_intent_id, created_at)
-       VALUES ($1, $2, 'Platform Adjustment', 'admin@donatefit.com', 'success', $3, $4, NOW() - INTERVAL '2 months')`,
+       VALUES ($1, $2, 'Platform Adjustment', 'admin@altruwave.com', 'success', $3, $4, NOW() - INTERVAL '2 months')`,
       [campaignId, parsedAmount, mockSessionId, mockIntentId]
     );
 

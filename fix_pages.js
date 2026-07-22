@@ -21,12 +21,12 @@ for (const file of files) {
   if (componentMatch && !content.includes('const { platformSettings }')) {
     content = content.replace(
       componentMatch[0],
-      `${componentMatch[0]}  const { platformSettings } = useSettings();\n  const platformName = platformSettings?.platform_name || 'DonateFit';\n`
+      `${componentMatch[0]}  const { platformSettings } = useSettings();\n  const platformName = platformSettings?.platform_name || 'AltruWave';\n`
     );
   }
 
   // Replace DonateFit in the defaultContent
-  content = content.replace(/DonateFit/g, '${platformName}');
+  content = content.replace(/AltruWave/g, '${platformName}');
   
   // Also fix the emails in ContactPage
   content = content.replace(/support@\$\{platformName\}\.com/g, 'support@${platformName.replace(/\\s+/g, "").toLowerCase()}.com');

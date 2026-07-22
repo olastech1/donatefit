@@ -96,7 +96,7 @@ function SettingField({ setting, onSave }) {
 // ── Main Component ───────────────────────────────────────────
 export default function AdminDashboardPage() {
   const { platformSettings } = useSettings();
-  const platformName = platformSettings?.platform_name || 'DonateFit';
+  const platformName = platformSettings?.platform_name || 'AltruWave';
   const { user } = useAuth();
   const navigate  = useNavigate();
 

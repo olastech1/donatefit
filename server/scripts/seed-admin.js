@@ -1,5 +1,5 @@
 /**
- * Admin Account Seeder for DonateFit
+ * Admin Account Seeder for AltruWave
  * 
  * Usage: node scripts/seed-admin.js
  * 
@@ -10,7 +10,7 @@ require('dotenv').config();
 const bcrypt = require('bcrypt');
 const pool = require('../config/db');
 
-const ADMIN_EMAIL = 'admin@donatefit.com';
+const ADMIN_EMAIL = 'admin@altruwave.com';
 const ADMIN_PASSWORD = 'admin123';
 const ADMIN_NAME = 'Platform Admin';
 

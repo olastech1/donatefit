@@ -1,5 +1,5 @@
 // ============================================================
-// DONATEFIT — Express Server (Stripe + Neon Edition)
+// ALTRUWAVE — Express Server (Stripe + Neon Edition)
 // ============================================================
 require('dotenv').config();
 const express = require('express');
@@ -34,11 +34,11 @@ app.use(cors({
       process.env.FRONTEND_URL || 'http://localhost:3000',
       'http://localhost:3000',
       'http://localhost:5173',
-      'https://donatefit.com',
-      'https://www.donatefit.com'
+      'https://altruwave.com',
+      'https://www.altruwave.com'
     ];
     // Allow requests with no origin (mobile apps, Postman, webhooks)
-    if (!origin || allowedOrigins.some(o => origin.startsWith(o)) || origin.endsWith('.vercel.app') || origin.includes('donatefit')) {
+    if (!origin || allowedOrigins.some(o => origin.startsWith(o)) || origin.endsWith('.vercel.app') || origin.includes('altruwave')) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS: ' + origin));
@@ -83,7 +83,7 @@ app.use('/api/recurring', recurringRoutes);
 app.get('/api/health', (req, res) => {
   res.json({
     success: true,
-    message: 'DonateFit API is running.',
+    message: 'AltruWave API is running.',
     stack: 'Stripe + Neon PSQL',
     timestamp: new Date().toISOString()
   });
@@ -125,7 +125,7 @@ app.use((err, req, res, next) => {
 // ============================================================
 if (!process.env.VERCEL) {
   app.listen(PORT, () => {
-    console.log(`\n💪  DonateFit API running on port ${PORT}`);
+    console.log(`\n🌊  AltruWave API running on port ${PORT}`);
     console.log(`📡 Health check: http://localhost:${PORT}/api/health`);
     console.log(`💳 Payment: Stripe Checkout`);
     console.log(`🗄️  Database: Neon PSQL\n`);

@@ -9,20 +9,20 @@ const pool = new Pool({
 
 const pages = {
   page_about_us: `
-    <h2>About DonateFit</h2>
-    <p>Welcome to <strong>DonateFit</strong>, a vibrant crowdfunding platform dedicated to empowering dreams, one campaign at a time.</p>
+    <h2>About AltruWave</h2>
+    <p>Welcome to <strong>AltruWave</strong>, a general crowdfunding platform dedicated to empowering meaningful causes, community projects, and personal dreams.</p>
     
     <h3>Our Mission</h3>
-    <p>Our mission is simple: to connect passionate creators, innovators, and changemakers with a global community of supporters who believe in their vision. We believe that everyone deserves a chance to bring their ideas to life, whether it's launching a groundbreaking startup, supporting a community initiative, or overcoming personal challenges.</p>
+    <p>Our mission is to provide the technology that connects changemakers with a global community of supporters. We believe that everyone deserves a secure and transparent platform to bring their ideas to life, support communities in need, and overcome personal challenges.</p>
 
     <h3>Why Choose Us?</h3>
     <ul>
-      <li><strong>Verified Campaigns:</strong> We prioritize trust and transparency. Every creator goes through a rigorous KYC (Know Your Customer) process before they can withdraw funds.</li>
-      <li><strong>Secure Donations:</strong> Backed by industry-leading encryption and powered by Stripe, your payments are always safe.</li>
-      <li><strong>Global Reach:</strong> Support campaigns from anywhere in the world and make an impact beyond borders.</li>
+      <li><strong>Secure Technology:</strong> Backed by industry-leading encryption and powered by Stripe, your payments are always safe.</li>
+      <li><strong>Identity Verification:</strong> We prioritize trust. Every creator goes through a KYC (Know Your Customer) process before withdrawing funds.</li>
+      <li><strong>Global Impact:</strong> Support campaigns from anywhere in the world and create waves of impact beyond borders.</li>
     </ul>
-
-    <p>Join us on our journey to make fundraising accessible, secure, and transparent for everyone.</p>
+    
+    <p>AltruWave is a technology provider and does not act as a broker, financial institution, or registered charity.</p>
   `,
   
   page_contact: `
@@ -31,10 +31,10 @@ const pages = {
     
     <h3>Get in Touch</h3>
     <p><strong>Email Support:</strong> <br />
-    Reach out to us anytime at <a href="mailto:support@donatefit.com">support@donatefit.com</a>. We aim to respond to all inquiries within 24-48 hours.</p>
+    Reach out to us anytime at <a href="mailto:support@altruwave.com">support@altruwave.com</a>. We aim to respond to all inquiries within 24-48 hours.</p>
 
     <p><strong>Business Inquiries:</strong> <br />
-    For partnerships and press inquiries, please email <a href="mailto:business@donatefit.com">business@donatefit.com</a>.</p>
+    For partnerships and press inquiries, please email <a href="mailto:business@altruwave.com">business@altruwave.com</a>.</p>
     
     <h3>Working Hours</h3>
     <p>Monday - Friday: 9:00 AM - 6:00 PM (EST)<br />
@@ -43,39 +43,39 @@ const pages = {
 
   page_terms_conditions: `
     <h2>Terms and Conditions</h2>
-    <p><strong>Last Updated: June 2026</strong></p>
+    <p><strong>Last Updated: July 2026</strong></p>
 
-    <h3>1. Acceptance of Terms</h3>
-    <p>By accessing or using the DonateFit platform, you agree to be bound by these Terms and Conditions. If you disagree with any part of these terms, please do not use our services.</p>
+    <h3>1. Acceptance of Terms & Platform Role</h3>
+    <p>By accessing or using the AltruWave platform, you agree to these Terms. AltruWave is a technology platform and software provider designed to facilitate voluntary donations to campaigns. <strong>We are not a broker, financial institution, creditor, or registered 501(c)(3) charity.</strong> We do not guarantee the success of any campaign or the delivery of any promised rewards.</p>
 
-    <h3>2. Use of the Platform</h3>
-    <p>DonateFit is a platform designed to facilitate donations to verified campaigns. We are not a broker, financial institution, or charity. While we enforce strict KYC policies for creators, we do not guarantee the accuracy of campaign claims.</p>
+    <h3>2. Campaign Creation & KYC</h3>
+    <p>Users creating campaigns ("Creators") must provide accurate personal and banking information. Funds will not be disbursed until identity verification is complete. Creators are legally liable for fulfilling any promises or rewards offered in their campaigns.</p>
 
-    <h3>3. Campaign Creation & KYC</h3>
-    <p>Users creating campaigns ("Creators") must provide accurate personal and banking information. Funds will not be disbursed until identity verification is complete. Misrepresentation of identity or campaign goals will result in immediate account termination, fund forfeiture, and potential legal action.</p>
+    <h3>3. Prohibited Businesses & Causes</h3>
+    <p>In accordance with Stripe's policies, you may not use AltruWave to raise funds for restricted or prohibited businesses, including but not limited to: illegal activities, firearms/weapons, adult content, gambling, multi-level marketing, or hate speech. Any violation will result in immediate account termination and freezing of funds.</p>
 
     <h3>4. Donations</h3>
-    <p>All donations made on the platform are strictly voluntary. Donors understand that they are supporting a campaign at their own risk. A platform fee may be deducted from donations to cover payment processing and operational costs.</p>
+    <p>Donations are made voluntarily and directly support the Creator. Donors understand that they are supporting a campaign at their own risk. AltruWave deducts a platform fee from donations to cover payment processing and operational costs.</p>
 
     <h3>5. Platform Rights</h3>
-    <p>We reserve the right to suspend or terminate campaigns, freeze funds, or ban users who violate our community guidelines or engage in fraudulent activities.</p>
+    <p>We reserve the right to suspend or terminate campaigns, freeze funds, or ban users who violate our community guidelines, engage in fraudulent activities, or violate our payment processor's Acceptable Use Policy.</p>
   `,
 
   page_refund_policy: `
     <h2>Refund Policy</h2>
-    <p><strong>Last Updated: June 2026</strong></p>
+    <p><strong>Last Updated: July 2026</strong></p>
 
     <h3>1. General Refund Policy</h3>
-    <p>Because donations are typically disbursed to campaign creators to fund their projects, all donations made on DonateFit are generally considered final and non-refundable.</p>
+    <p>AltruWave provides the software to facilitate donations, but the funds are ultimately disbursed to the campaign Creators. Therefore, <strong>all donations made on AltruWave are generally considered final and non-refundable</strong> by the platform.</p>
 
-    <h3>2. Fraud and Unauthorized Transactions</h3>
-    <p>In the event of a proven fraudulent campaign, or if a transaction was made using your payment method without your authorization, we will work with our payment processor (Stripe) to investigate the issue. If funds have not yet been withdrawn by the creator, we will issue a full refund to affected donors.</p>
+    <h3>2. Creator Liability</h3>
+    <p>The Creator is solely responsible for fulfilling promises or rewards. AltruWave does not guarantee that funds will be used as promised. Any disputes regarding refunds must be directed to the Creator of the campaign.</p>
 
-    <h3>3. Requesting a Refund</h3>
-    <p>If you made a mistake (e.g., donating $100 instead of $10), you may request a refund within <strong>24 hours</strong> of the transaction by contacting our support team at <a href="mailto:support@donatefit.com">support@donatefit.com</a>. Please note that refunds cannot be issued if the campaign creator has already withdrawn the funds.</p>
+    <h3>3. Requesting a Refund for Errors</h3>
+    <p>If you made a factual error (e.g., donating $100 instead of $10), you may request a refund within <strong>14 days</strong> of the transaction by contacting <a href="mailto:support@altruwave.com">support@altruwave.com</a>. Refunds for errors can only be issued if the funds have not yet been withdrawn by the Creator.</p>
 
-    <h3>4. Processing Times</h3>
-    <p>Approved refunds may take 5-10 business days to appear on your bank statement, depending on your financial institution.</p>
+    <h3>4. Fraud and Unauthorized Transactions</h3>
+    <p>In the event of a proven fraudulent campaign or an unauthorized transaction, we will work with Stripe to investigate. If the funds are still held by the platform, we will issue a full refund to affected donors. We reserve the right to refund donations if a campaign violates our Terms.</p>
   `
 };
 

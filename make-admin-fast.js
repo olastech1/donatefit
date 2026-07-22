@@ -9,7 +9,7 @@ const pool = new Pool({
 
 async function run() {
   try {
-    const res = await pool.query("UPDATE users SET role = 'admin', email_verified = TRUE WHERE email = 'admin@donatefit.com' RETURNING *");
+    const res = await pool.query("UPDATE users SET role = 'admin', email_verified = TRUE WHERE email = 'admin@altruwave.com' RETURNING *");
     console.log('Upgraded user:', res.rows[0].email, 'to', res.rows[0].role);
   } catch(e) {
     console.error(e);

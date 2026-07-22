@@ -5,7 +5,7 @@ import { FiTwitter, FiInstagram, FiLinkedin, FiGithub, FiHeart, FiShield, FiLock
 
 export default function Footer() {
   const { platformSettings } = useSettings();
-  const platformName = platformSettings?.platform_name || 'DonateFit';
+  const platformName = platformSettings?.platform_name || 'AltruWave';
   const year = new Date().getFullYear();
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -21,10 +21,10 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="footer-brand">
             <Link to="/" className="footer-logo">
-              <span style={{ fontSize: '1.2em', marginRight: '6px' }}>💪</span>
+              <span style={{ fontSize: '1.2em', marginRight: '6px' }}>🌊</span>
               <span className="gradient-text">{platformName}</span>
             </Link>
-            <p>Fuel Every Goal. A vibrant crowdfunding platform empowering fitness dreams worldwide.</p>
+            <p>Empower Every Cause. A general crowdfunding platform helping people make waves of impact worldwide.</p>
             
             <div className="footer-social">
               <a href="#" aria-label="Twitter"><FiTwitter /></a>
@@ -78,7 +78,10 @@ export default function Footer() {
         </div>
         
         {/* Bottom bar */}
-        <div className="footer-bottom">
+        <div className="footer-disclaimer" style={{ fontSize: '0.8rem', color: 'var(--text-muted)', borderTop: '1px solid var(--border)', paddingTop: '20px', paddingBottom: '20px', textAlign: 'center', lineHeight: '1.5' }}>
+          <strong>Legal Disclaimer:</strong> {platformName} is a technology platform and software provider. We are not a registered charity, broker, or financial institution. Donations are made voluntarily to support campaigns, and {platformName} does not guarantee the success of any campaign or the delivery of any rewards or promises made by creators.
+        </div>
+        <div className="footer-bottom" style={{ borderTop: 'none', paddingTop: '0' }}>
           <div className="footer-bottom-left">
             <p>Made with <FiHeart size={12} style={{ display: 'inline', verticalAlign: 'middle', color: '#6366F1' }} /> by {platformName} &copy; {year}</p>
           </div>

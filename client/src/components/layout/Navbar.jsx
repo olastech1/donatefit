@@ -19,7 +19,7 @@ export default function Navbar() {
   const dropdownRef = useRef(null);
 
   // Extract first and second words for the logo styling
-  const platformName = platformSettings?.platform_name || 'DonateFit';
+  const platformName = platformSettings?.platform_name || 'AltruWave';
   const nameParts = platformName.split(/(?=[A-Z])/);
   let firstPart = platformName;
   let secondPart = '';

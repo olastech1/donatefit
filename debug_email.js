@@ -27,7 +27,7 @@ async function debugEmail() {
     const info = await transporter.sendMail({
       from: smtpFrom,
       to: 'olastechng@gmail.com',
-      subject: 'Debug Email - DonateFit',
+      subject: 'Debug Email - AltruWave',
       html: '<p>This is a debug email sent from Node.js with verbose logging.</p>',
     });
 

@@ -21,13 +21,13 @@ for (const file of files) {
   if (componentMatch && !content.includes('const { platformSettings }')) {
     content = content.replace(
       componentMatch[0],
-      `${componentMatch[0]}  const { platformSettings } = useSettings();\n  const platformName = platformSettings?.platform_name || 'DonateFit';\n`
+      `${componentMatch[0]}  const { platformSettings } = useSettings();\n  const platformName = platformSettings?.platform_name || 'AltruWave';\n`
     );
   }
 
   // Replace DonateFit text nodes with {platformName}
-  content = content.replace(/>DonateFit</g, '>{platformName}<');
-  content = content.replace(/ DonateFit/g, ' {platformName}');
+  content = content.replace(/>AltruWave</g, '>{platformName}<');
+  content = content.replace(/ AltruWave/g, ' {platformName}');
   
   fs.writeFileSync(p, content);
   console.log('Fixed', file);

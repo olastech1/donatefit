@@ -1,6 +1,6 @@
 -- ============================================================
 -- DONATEFIT — Neon PSQL Schema (Stripe Edition)
--- A fitness crowdfunding platform
+-- A general crowdfunding platform
 -- ============================================================
 
 -- Enable UUID generation (Neon supports this natively)
@@ -73,13 +73,13 @@ INSERT INTO platform_settings (setting_key, setting_value, is_encrypted, descrip
     ('stripe_secret_key', '', TRUE, 'Stripe Secret Key (sk_live_... or sk_test_...)'),
     ('stripe_webhook_secret', '', TRUE, 'Stripe Webhook Signing Secret (whsec_...)'),
     ('platform_fee_percent', '2.5', FALSE, 'Platform fee percentage deducted from donations'),
-    ('platform_name', 'DonateFit', FALSE, 'Display name of the platform'),
-    ('support_email', 'support@donatefit.com', FALSE, 'Platform support email'),
+    ('platform_name', 'AltruWave', FALSE, 'Display name of the platform'),
+    ('support_email', 'support@altruwave.com', FALSE, 'Platform support email'),
     ('smtp_host', '', FALSE, 'SMTP server host'),
     ('smtp_port', '587', FALSE, 'SMTP server port'),
     ('smtp_user', '', FALSE, 'SMTP authentication username'),
     ('smtp_pass', '', TRUE, 'SMTP authentication password'),
-    ('smtp_from', 'DonateFit <noreply@donatefit.com>', FALSE, 'Sender Name and Email'),
+    ('smtp_from', 'AltruWave <noreply@altruwave.com>', FALSE, 'Sender Name and Email'),
     ('require_email_verification', 'true', FALSE, 'Require users to verify their email before logging in');
 
 CREATE INDEX idx_platform_settings_key ON platform_settings(setting_key);

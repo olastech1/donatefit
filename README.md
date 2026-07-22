@@ -1,11 +1,11 @@
-# DonateFit
+# AltruWave
 
-A modern fitness crowdfunding platform built with React, Node.js/Express, Stripe, and Neon PostgreSQL.
+A modern general crowdfunding platform built with React, Node.js/Express, Stripe, and Neon PostgreSQL.
 
 ## Architecture
 
 ```
-donatefit/
+altruwave/
 ├── database/          # Neon PSQL schema & seed scripts
 │   ├── schema.sql     # Tables, indexes, triggers, platform_settings
 │   └── seed.sql       # Development test data
@@ -29,8 +29,8 @@ donatefit/
 
 ```bash
 # 1. Clone & install
-git clone https://github.com/olastech1/donatefit.git
-cd donatefit
+git clone https://github.com/olastech1/altruwave.git
+cd altruwave
 
 # 2. Set up environment
 cp server/.env.example server/.env

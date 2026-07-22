@@ -1,5 +1,5 @@
 -- ============================================================
--- DONATEFIT — Migration v2: New Features
+-- ALTRUWAVE — Migration v2: New Features
 -- Adds: Comments, Reward Tiers, Recurring Donations, User Profiles
 -- ============================================================
 
@@ -85,8 +85,8 @@ ALTER TABLE donations ADD COLUMN IF NOT EXISTS is_recurring BOOLEAN NOT NULL DEF
 -- ============================================================
 -- 6. UPDATE PLATFORM BRANDING
 -- ============================================================
-UPDATE platform_settings SET setting_value = 'DonateFit' WHERE setting_key = 'platform_name';
-UPDATE platform_settings SET setting_value = 'support@donatefit.com' WHERE setting_key = 'support_email';
+UPDATE platform_settings SET setting_value = 'AltruWave' WHERE setting_key = 'platform_name';
+UPDATE platform_settings SET setting_value = 'support@altruwave.com' WHERE setting_key = 'support_email';
 
 
 -- ============================================================

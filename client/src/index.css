@@ -2,22 +2,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap');
 
 /* ============================================================
-   DONATEFIT — Design System v4.0
-   "Fuel Every Goal" — Energetic & Bold
+   ALTRUWAVE — Design System v5.0
+   "Empower Every Cause" — Modern & Trustworthy
    ============================================================ */
 
 :root {
-  /* Primary — Electric Green (Energy, Fitness, Go) */
-  --coral-700: #004D25; --coral-600: #00873E; --coral-500: #00C853; --coral-400: #00E676;
-  --coral-300: #B9F6CA; --coral-200: #E8F5E9; --coral-100: #E8F5E9; --coral-50: #F1F8E9;
+  /* Primary — Teal (Trust, Ocean, Impact) */
+  --coral-700: #0F766E; --coral-600: #0D9488; --coral-500: #14B8A6; --coral-400: #2DD4BF;
+  --coral-300: #5EEAD4; --coral-200: #99F6E4; --coral-100: #CCFBF1; --coral-50: #F0FDFA;
   
-  /* Secondary — Vibrant Orange (Warmth, Action, Drive) */
-  --amber-700: #BF360C; --amber-600: #E64A19; --amber-500: #FF6D00; --amber-400: #FF9100;
-  --amber-300: #FFB74D; --amber-200: #FFE0B2; --amber-100: #FFE0B2; --amber-50: #FFF3E0;
+  /* Secondary — Ocean Blue (Stability, Depth, Calm) */
+  --amber-700: #1D4ED8; --amber-600: #2563EB; --amber-500: #3B82F6; --amber-400: #60A5FA;
+  --amber-300: #93C5FD; --amber-200: #BFDBFE; --amber-100: #DBEAFE; --amber-50: #EFF6FF;
   
-  /* Accent — Energy Yellow (Highlight, Motivation, Power) */
-  --teal-700: #F57F17; --teal-600: #F9A825; --teal-500: #FFD600; --teal-400: #FFEA00;
-  --teal-300: #FFF176; --teal-200: #FFF9C4; --teal-100: #FFF9C4; --teal-50: #FFFDE7;
+  /* Accent — Deep Purple (Inspiration, Future, Community) */
+  --teal-700: #6D28D9; --teal-600: #7C3AED; --teal-500: #8B5CF6; --teal-400: #A78BFA;
+  --teal-300: #C4B5FD; --teal-200: #DDD6FE; --teal-100: #EDE9FE; --teal-50: #F5F3FF;
   
   /* Deep Mystic Purple (for secondary accents, muted) */
   --purple-600: #4e4b66; --purple-500: #6b6985; --purple-400: #8b88a8; --purple-100: #e8e7f0; --purple-50: #f7f7fb;
@@ -49,26 +49,26 @@
   --text-inverse: #ffffff;
   
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #00C853 0%, #00BFA5 100%);
-  --gradient-warm: linear-gradient(135deg, #FF6D00 0%, #FF3D00 100%);
-  --gradient-cool: linear-gradient(135deg, #00C853 0%, #76FF03 100%);
+  --gradient-primary: linear-gradient(135deg, #14B8A6 0%, #0D9488 100%);
+  --gradient-warm: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+  --gradient-cool: linear-gradient(135deg, #14B8A6 0%, #3B82F6 100%);
   --gradient-hero: linear-gradient(135deg, #f9f9fa 0%, #ffffff 50%, #f4f4f4 100%);
-  --gradient-sunset: linear-gradient(135deg, #00C853 0%, #FF6D00 100%);
-  --gradient-mesh: radial-gradient(at 40% 20%, rgba(0,200,83,0.05) 0, transparent 50%), 
-                   radial-gradient(at 80% 0%, rgba(255,109,0,0.05) 0, transparent 50%), 
-                   radial-gradient(at 0% 50%, rgba(0,200,83,0.03) 0, transparent 50%);
-  --gradient-card-hover: linear-gradient(135deg, rgba(0,200,83,0.02) 0%, rgba(255,109,0,0.02) 100%);
+  --gradient-sunset: linear-gradient(135deg, #0D9488 0%, #2563EB 100%);
+  --gradient-mesh: radial-gradient(at 40% 20%, rgba(20,184,166,0.05) 0, transparent 50%), 
+                   radial-gradient(at 80% 0%, rgba(59,130,246,0.05) 0, transparent 50%), 
+                   radial-gradient(at 0% 50%, rgba(139,92,246,0.03) 0, transparent 50%);
+  --gradient-card-hover: linear-gradient(135deg, rgba(20,184,166,0.02) 0%, rgba(59,130,246,0.02) 100%);
   
   /* Action */
-  --accent: #00C853; --accent-hover: #00E676; --accent-light: rgba(0, 200, 83, 0.1);
-  --accent-gradient: linear-gradient(135deg, #00C853 0%, #00BFA5 100%);
-  --accent-glow: 0 0 24px rgba(0, 200, 83, 0.15);
+  --accent: #14B8A6; --accent-hover: #0D9488; --accent-light: rgba(20, 184, 166, 0.1);
+  --accent-gradient: linear-gradient(135deg, #14B8A6 0%, #0D9488 100%);
+  --accent-glow: 0 0 24px rgba(20, 184, 166, 0.15);
   
   /* Semantic */
-  --success: #00C853; --success-bg: #E8F5E9; 
-  --warning: #FF6D00; --warning-bg: #FFF3E0;
-  --danger: #d93025; --danger-bg: #fce8e6;
-  --progress-gradient: linear-gradient(90deg, #00C853 0%, #76FF03 100%);
+  --success: #14B8A6; --success-bg: #F0FDFA; 
+  --warning: #F59E0B; --warning-bg: #FEF3C7;
+  --danger: #EF4444; --danger-bg: #FEE2E2;
+  --progress-gradient: linear-gradient(90deg, #14B8A6 0%, #3B82F6 100%);
   
   /* Layout & Borders */
   --border: #ebebeb; 
