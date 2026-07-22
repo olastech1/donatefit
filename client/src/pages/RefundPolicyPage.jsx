@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useSettings } from '../context/SettingsContext';
 
 export default function RefundPolicyPage() {
   const { platformSettings } = useSettings();
