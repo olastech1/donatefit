@@ -213,7 +213,10 @@ export default function AdminDashboardPage() {
   useEffect(() => { setSearchQuery(''); setStatusFilter('all'); }, [tab]);
 
   // Auth guard
-  useEffect(() => { if (user && user.role !== 'admin') navigate('/'); }, [user, navigate]);
+  useEffect(() => { 
+    if (!user) navigate('/login');
+    else if (user.role !== 'admin') navigate('/'); 
+  }, [user, navigate]);
 
   // Set initial email
   useEffect(() => {
