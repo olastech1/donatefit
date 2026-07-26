@@ -1,55 +1,135 @@
 const nodemailer = require('nodemailer');
 const { getSetting } = require('../config/settings');
 
+// ── AltruWave Email Design System ──────────────────────────────
+// Premium dark-header emails with teal accent branding.
+// All templates are responsive and dark-mode friendly.
+// ────────────────────────────────────────────────────────────────
+
+const BRAND = {
+  accent:     '#14b8a6',   // teal-500
+  accentDark: '#0d9488',   // teal-600
+  accentGlow: 'rgba(20,184,166,0.25)',
+  navy:       '#0b0f19',
+  navyLight:  '#111827',
+  text:       '#334155',
+  textLight:  '#64748b',
+  textDark:   '#0f172a',
+  success:    '#10b981',
+  danger:     '#ef4444',
+  warning:    '#f59e0b',
+  white:      '#ffffff',
+  bgLight:    '#f8fafc',
+  border:     '#e2e8f0',
+};
+
 const getEmailTemplate = (content, previewText = '', platformName = 'AltruWave') => `
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
+  <title>${platformName}</title>
+  <!--[if mso]><style>body{font-family:Arial,sans-serif!important}</style><![endif]-->
 </head>
-<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f1f5f9; margin: 0; padding: 40px 20px; -webkit-font-smoothing: antialiased;">
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f1f5f9; margin: 0; padding: 40px 16px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
   <!-- Preview Text -->
-  <div style="display: none; max-height: 0px; overflow: hidden; color: transparent; opacity: 0;">
-    ${previewText}
+  <div style="display: none; max-height: 0px; overflow: hidden; color: transparent; opacity: 0; font-size: 0; line-height: 0;">
+    ${previewText}&#847;&#847;&#847;&#847;&#847;&#847;&#847;&#847;&#847;
   </div>
-  
-  <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border-top: 4px solid #1863dc;">
-    
-    <!-- Header -->
-    <div style="background-color: #0f172a; padding: 32px 20px; text-align: center;">
-      <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">🌊 ${platformName}</h1>
+
+  <!-- Container -->
+  <div style="max-width: 600px; margin: 0 auto;">
+
+    <!-- Card -->
+    <div style="background-color: ${BRAND.white}; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08); border: 1px solid ${BRAND.border};">
+
+      <!-- Header -->
+      <div style="background: linear-gradient(135deg, ${BRAND.navy} 0%, #1e293b 100%); padding: 36px 32px; text-align: center;">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td align="center">
+              <!-- Logo circle -->
+              <div style="display: inline-block; width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, ${BRAND.accent}, #06b6d4); margin-bottom: 12px; line-height: 48px; text-align: center;">
+                <span style="font-size: 22px; color: ${BRAND.white}; font-weight: 800;">A</span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td align="center">
+              <h1 style="margin: 0; color: ${BRAND.white}; font-size: 26px; font-weight: 700; letter-spacing: -0.5px;">${platformName}</h1>
+              <p style="margin: 6px 0 0; color: ${BRAND.accent}; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;">Crowdfunding Platform</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Content -->
+      <div style="padding: 40px 32px; color: ${BRAND.text}; font-size: 15px; line-height: 1.7;">
+        ${content}
+      </div>
+
+      <!-- Footer -->
+      <div style="background-color: ${BRAND.bgLight}; padding: 24px 32px; text-align: center; border-top: 1px solid ${BRAND.border};">
+        <p style="margin: 0 0 8px; color: ${BRAND.textLight}; font-size: 12px; line-height: 1.6;">
+          © ${new Date().getFullYear()} ${platformName}. All rights reserved.<br>
+          Empowering Generosity, One Campaign at a Time.
+        </p>
+        <p style="margin: 0; font-size: 11px;">
+          <a href="\${process.env.FRONTEND_URL || 'https://altruwave.com'}" style="color: ${BRAND.accent}; text-decoration: none; font-weight: 600;">altruwave.com</a>
+        </p>
+      </div>
+
     </div>
-    
-    <!-- Content -->
-    <div style="padding: 40px 32px; color: #334155; font-size: 16px; line-height: 1.6;">
-      ${content}
-    </div>
-    
-    <!-- Footer -->
-    <div style="background-color: #f8fafc; padding: 24px; text-align: center; border-top: 1px solid #e2e8f0;">
-      <p style="margin: 0; color: #64748b; font-size: 13px; line-height: 1.5;">
-        © ${new Date().getFullYear()} ${platformName}.<br>
-        Waves of Impact.
-      </p>
-    </div>
-    
+
+    <!-- Sub-footer -->
+    <p style="text-align: center; color: #94a3b8; font-size: 11px; margin-top: 20px; line-height: 1.5;">
+      You're receiving this because you have an account on ${platformName}.<br>
+      If this wasn't intended for you, please ignore this email.
+    </p>
+
   </div>
 </body>
 </html>
 `;
 
-const getButtonHtml = (url, text) => `
-  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 24px; margin-bottom: 24px;">
+const getButtonHtml = (url, text, variant = 'primary') => {
+  const bg = variant === 'danger' ? BRAND.danger : `linear-gradient(135deg, ${BRAND.accent}, #06b6d4)`;
+  const shadow = variant === 'danger' ? 'rgba(239,68,94,0.3)' : BRAND.accentGlow;
+  return `
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 28px 0;">
     <tr>
       <td align="left">
-        <a href="${url}" style="display: inline-block; background-color: #1863dc; color: #ffffff; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 6px -1px rgba(24, 99, 220, 0.2);">
-          ${text}
-        </a>
+        <a href="${url}" style="display: inline-block; background: ${bg}; color: ${BRAND.white}; padding: 14px 32px; text-decoration: none; border-radius: 10px; font-weight: 700; font-size: 15px; box-shadow: 0 4px 14px ${shadow}; letter-spacing: -0.01em; mso-padding-alt: 14px 32px;">${text}</a>
       </td>
     </tr>
   </table>
 `;
+};
+
+const getInfoBox = (label, value, color = BRAND.accent) => `
+  <div style="background: linear-gradient(135deg, ${color}10, ${color}08); border: 1px solid ${color}30; border-radius: 12px; padding: 24px; margin: 20px 0; text-align: center;">
+    <p style="margin: 0 0 4px; font-size: 11px; color: ${color}; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;">${label}</p>
+    <p style="margin: 0; font-size: 38px; font-weight: 800; color: ${color}; line-height: 1.2;">${value}</p>
+  </div>
+`;
+
+const getAlertBox = (message, color = BRAND.danger) => `
+  <div style="background-color: ${color}08; border-left: 4px solid ${color}; padding: 16px 20px; margin: 20px 0; border-radius: 0 8px 8px 0;">
+    ${message}
+  </div>
+`;
+
+const getHeading = (text, color = BRAND.textDark) =>
+  `<h3 style="color: ${color}; font-size: 20px; font-weight: 700; margin: 0 0 16px; line-height: 1.3;">${text}</h3>`;
+
+const getParagraph = (text) =>
+  `<p style="margin: 0 0 16px; color: ${BRAND.text}; font-size: 15px; line-height: 1.7;">${text}</p>`;
+
+const getSmallNote = (text) =>
+  `<p style="margin-top: 32px; font-size: 12px; color: ${BRAND.textLight}; border-top: 1px solid ${BRAND.border}; padding-top: 16px; line-height: 1.5;">${text}</p>`;
 
 /**
  * Send an email safely (fails gracefully if SMTP is not configured)
@@ -102,17 +182,20 @@ module.exports = {
   // Raw email sender for custom broadcast
   sendEmail,
 
-  // 1. Auth Emails
+  // ═══════════════════════════════════════════════════════════
+  // 1. AUTH EMAILS
+  // ═══════════════════════════════════════════════════════════
+
   sendEmailVerificationEmail: (email, name, verifyUrl) =>
     sendEmail(
       email,
-      'Verify your email address — AltruWave',
+      'Verify your email — AltruWave',
       `
-        <h3 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Almost there, ${name}! 🎉</h3>
-        <p style="margin: 0 0 16px;">Thanks for signing up for AltruWave. Before you can log in, we need to confirm your email address.</p>
-        <p style="margin: 0 0 16px;">Click the button below to verify your email. This link expires in <strong>24 hours</strong>.</p>
-        ${getButtonHtml(verifyUrl, '✅ Verify My Email Address')}
-        <p style="margin-top: 32px; font-size: 13px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 16px;">If you did not create an account, you can safely ignore this email.</p>
+        ${getHeading(`Welcome aboard, ${name}! 🎉`)}
+        ${getParagraph(`Thanks for creating an AltruWave account. To get started, we just need to confirm your email address.`)}
+        ${getParagraph(`Click the button below to verify. This link expires in <strong>24 hours</strong>.`)}
+        ${getButtonHtml(verifyUrl, '✓  Verify Email Address')}
+        ${getSmallNote('If you didn\'t create an AltruWave account, you can safely ignore this email.')}
       `,
       'Confirm your email to activate your AltruWave account.'
     ),
@@ -120,206 +203,264 @@ module.exports = {
   sendWelcomeEmail: (email, name) =>
     sendEmail(
       email,
-      'Welcome to AltruWave!',
+      'Welcome to AltruWave! 🎉',
       `
-        <h3 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Welcome, ${name}!</h3>
-        <p style="margin: 0 0 16px;">Your email has been verified and your AltruWave account is now fully active.</p>
-        <p style="margin: 0 0 16px;">You can now create campaigns and start raising funds for causes that matter to you.</p>
-        ${getButtonHtml(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/dashboard`, 'Go to Dashboard')}
+        ${getHeading(`You're all set, ${name}!`)}
+        ${getParagraph(`Your email has been verified and your AltruWave account is now fully active.`)}
+        ${getParagraph(`Here's what you can do next:`)}
+        <ul style="margin: 0 0 20px; padding-left: 20px; color: ${BRAND.text}; font-size: 15px; line-height: 2;">
+          <li><strong>Create a campaign</strong> to raise funds for a cause</li>
+          <li><strong>Browse campaigns</strong> and support others</li>
+          <li><strong>Track donations</strong> in real time from your dashboard</li>
+        </ul>
+        ${getButtonHtml(`${process.env.FRONTEND_URL || 'https://altruwave.com'}/dashboard`, 'Go to My Dashboard')}
       `,
-      'Your account has been verified and is ready to use.'
+      'Your account is verified and ready to use.'
     ),
 
-  // 2. Admin Verification Email
+  // ═══════════════════════════════════════════════════════════
+  // 2. ADMIN VERIFICATION
+  // ═══════════════════════════════════════════════════════════
+
   sendAdminVerifiedEmail: (email, name) =>
     sendEmail(
       email,
-      'Your account has been verified by an admin',
+      'Your account has been verified ✓',
       `
-        <h3 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Good news, ${name}!</h3>
-        <p style="margin: 0 0 16px;">An administrator has manually reviewed and verified your AltruWave account.</p>
-        <p style="margin: 0 0 16px;">You now have full access to create campaigns and raise funds.</p>
-        ${getButtonHtml(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/dashboard`, 'Go to Dashboard')}
+        ${getHeading(`Good news, ${name}! ✓`)}
+        ${getParagraph(`An administrator has reviewed and <strong>verified</strong> your AltruWave account.`)}
+        ${getParagraph(`You now have full access to create campaigns, receive donations, and request withdrawals.`)}
+        ${getButtonHtml(`${process.env.FRONTEND_URL || 'https://altruwave.com'}/dashboard`, 'Go to Dashboard')}
       `,
-      'Your account has been manually verified and is ready to use.'
+      'Your account has been manually verified by an administrator.'
     ),
 
-  // 3. Campaign Emails
+  // ═══════════════════════════════════════════════════════════
+  // 3. CAMPAIGN EMAILS
+  // ═══════════════════════════════════════════════════════════
+
   sendCampaignPendingEmail: (email, title) =>
     sendEmail(
-      email, 
-      'Campaign Under Review', 
+      email,
+      'Campaign submitted for review',
       `
-        <h3 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Campaign Submitted</h3>
-        <p style="margin: 0 0 16px;">Your campaign <strong style="color: #1863dc;">"${title}"</strong> has been successfully submitted!</p>
-        <p style="margin: 0 0 16px;">It is currently pending review by our administration team to ensure it meets platform guidelines. This process usually takes less than 24 hours.</p>
-        <p style="margin: 0 0 16px;">We will notify you the moment it is approved and live.</p>
+        ${getHeading('Campaign Submitted Successfully')}
+        ${getParagraph(`Your campaign <strong style="color: ${BRAND.accent};">"${title}"</strong> has been submitted and is now pending review.`)}
+        ${getInfoBox('Status', '⏳ Under Review', BRAND.warning)}
+        ${getParagraph(`Our team reviews submissions within <strong>24 hours</strong> to ensure they meet community guidelines. We'll email you the moment your campaign is approved.`)}
       `,
-      'Your campaign has been successfully submitted and is pending review.'
+      `Your campaign "${title}" is pending review.`
     ),
 
   sendCampaignApprovedEmail: (email, title, campaignId) =>
     sendEmail(
-      email, 
-      'Campaign Approved!', 
+      email,
+      'Your campaign is now LIVE! 🎉',
       `
-        <h3 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Great News! 🎉</h3>
-        <p style="margin: 0 0 16px;">Your campaign <strong style="color: #1863dc;">"${title}"</strong> has been officially approved and is now live on the platform.</p>
-        <p style="margin: 0 0 16px;">You can now start sharing your campaign link with your network to begin raising funds.</p>
-        ${getButtonHtml(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/campaigns/${campaignId}`, 'View Your Campaign')}
+        ${getHeading('Campaign Approved! 🎉')}
+        ${getParagraph(`Great news — your campaign <strong style="color: ${BRAND.accent};">"${title}"</strong> has been approved and is now live on AltruWave.`)}
+        ${getInfoBox('Status', '✓ Live & Active', BRAND.success)}
+        ${getParagraph(`Share your campaign link with friends, family, and your network to start receiving donations.`)}
+        ${getButtonHtml(`${process.env.FRONTEND_URL || 'https://altruwave.com'}/campaigns/${campaignId}`, 'View Your Campaign')}
       `,
-      'Your campaign has been approved and is now live!'
+      `Your campaign "${title}" has been approved and is live!`
     ),
 
   sendCampaignRejectedEmail: (email, title) =>
     sendEmail(
-      email, 
-      'Campaign Status Update', 
+      email,
+      'Campaign review update',
       `
-        <h3 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Campaign Update</h3>
-        <p style="margin: 0 0 16px;">Unfortunately, your campaign <strong style="color: #1863dc;">"${title}"</strong> could not be approved at this time as it did not meet our community guidelines.</p>
-        <p style="margin: 0 0 16px;">Please log in to your dashboard to review the feedback, or contact our support team if you believe this was a mistake.</p>
+        ${getHeading('Campaign Not Approved')}
+        ${getParagraph(`Unfortunately, your campaign <strong style="color: ${BRAND.accent};">"${title}"</strong> could not be approved as it did not meet our community guidelines.`)}
+        ${getAlertBox(`
+          <p style="margin: 0; font-weight: 600; color: #991b1b; font-size: 14px;">What you can do:</p>
+          <p style="margin: 6px 0 0; color: #7f1d1d; font-size: 13px; line-height: 1.5;">Review the feedback in your dashboard, make the necessary changes, and resubmit. If you believe this was a mistake, contact our support team.</p>
+        `)}
+        ${getButtonHtml(`${process.env.FRONTEND_URL || 'https://altruwave.com'}/dashboard`, 'Review in Dashboard')}
       `,
-      'Important update regarding your recent campaign submission.'
+      `Your campaign "${title}" requires changes before approval.`
     ),
 
-  // 3. Donation Emails
+  // ═══════════════════════════════════════════════════════════
+  // 4. DONATION EMAILS
+  // ═══════════════════════════════════════════════════════════
+
   sendDonationReceiptEmail: (email, donorName, amount, campaignTitle, trackingUrl) =>
     sendEmail(
-      email, 
-      'Donation Receipt - Thank You!', 
+      email,
+      `Donation receipt — $${amount}`,
       `
-        <h3 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Thank You, ${donorName}! 💜</h3>
-        <p style="margin: 0 0 16px;">We successfully processed your donation of <strong style="color: #10b981; font-size: 18px;">$${amount}</strong> to support <strong style="color: #1863dc;">"${campaignTitle}"</strong>.</p>
-        <p style="margin: 0 0 16px;">Your generosity is what makes our community so powerful. You can track the impact of your donation at any time using the link below:</p>
+        ${getHeading(`Thank you, ${donorName}! 💚`)}
+        ${getParagraph(`Your donation has been successfully processed.`)}
+        ${getInfoBox('Amount Donated', `$${amount}`, BRAND.success)}
+        ${getParagraph(`Campaign: <strong style="color: ${BRAND.accent};">"${campaignTitle}"</strong>`)}
+        ${getParagraph(`Your generosity makes a real difference. Track the impact of your donation any time using the button below.`)}
         ${getButtonHtml(trackingUrl, 'Track Your Donation')}
       `,
-      `Your donation of $${amount} to ${campaignTitle} was successful.`
+      `Your donation of $${amount} to "${campaignTitle}" was successful.`
     ),
 
   sendDonationAlertEmail: (creatorEmail, creatorName, donorName, amount, campaignTitle) =>
     sendEmail(
       creatorEmail,
-      `You just received a $${amount} donation on AltruWave!`,
+      `New donation: $${amount} received! 🎉`,
       `
-        <h3 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Great news, ${creatorName}! 🎉</h3>
-        <p style="margin: 0 0 24px;">Someone just made a donation to your campaign <strong style="color: #1863dc;">"${campaignTitle}"</strong>.</p>
+        ${getHeading(`You received a donation! 🎉`)}
+        ${getParagraph(`Someone just supported your campaign <strong style="color: ${BRAND.accent};">"${campaignTitle}"</strong>.`)}
 
-        <div style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border: 1px solid #86efac; border-radius: 12px; padding: 24px; margin: 0 0 24px; text-align: center;">
-          <p style="margin: 0 0 4px; font-size: 13px; color: #15803d; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;">Donation Received</p>
-          <p style="margin: 0; font-size: 42px; font-weight: 800; color: #15803d; line-height: 1.1;">$${amount}</p>
-          <p style="margin: 8px 0 0; font-size: 14px; color: #166534;">from <strong>${donorName}</strong></p>
+        <div style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border: 1px solid #86efac; border-radius: 14px; padding: 28px; margin: 24px 0; text-align: center;">
+          <p style="margin: 0 0 4px; font-size: 11px; color: #15803d; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;">Donation Received</p>
+          <p style="margin: 0; font-size: 44px; font-weight: 800; color: #15803d; line-height: 1.1;">$${amount}</p>
+          <p style="margin: 10px 0 0; font-size: 14px; color: #166534;">from <strong>${donorName}</strong></p>
         </div>
 
-        <p style="margin: 0 0 16px;">Log in to your dashboard to view your full campaign progress and manage your funds.</p>
-        ${getButtonHtml(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/dashboard`, 'View My Dashboard')}
+        ${getParagraph(`Log in to your dashboard to view your full campaign progress and manage withdrawals.`)}
+        ${getButtonHtml(`${process.env.FRONTEND_URL || 'https://altruwave.com'}/dashboard`, 'View Dashboard')}
       `,
-      `You received a new $${amount} donation on your campaign "${campaignTitle}"`
+      `You received a $${amount} donation on "${campaignTitle}".`
     ),
 
-  // 4. Withdrawal Emails
+  // ═══════════════════════════════════════════════════════════
+  // 5. WITHDRAWAL EMAILS
+  // ═══════════════════════════════════════════════════════════
+
   sendWithdrawalRequestEmail: (email, amount, campaignTitle) =>
     sendEmail(
-      email, 
-      'Withdrawal Request Received', 
+      email,
+      'Withdrawal request received',
       `
-        <h3 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Payout Requested</h3>
-        <p style="margin: 0 0 16px;">We have received your request to withdraw <strong style="color: #10b981; font-size: 18px;">$${amount}</strong> from your campaign <strong style="color: #1863dc;">"${campaignTitle}"</strong>.</p>
-        <p style="margin: 0 0 16px;">Our financial team is reviewing the request. You will receive an email once it is approved and the transfer has been initiated.</p>
+        ${getHeading('Payout Request Submitted')}
+        ${getParagraph(`Your request to withdraw funds from your campaign has been received.`)}
+        ${getInfoBox('Withdrawal Amount', `$${amount}`, BRAND.accent)}
+        ${getParagraph(`Campaign: <strong style="color: ${BRAND.accent};">"${campaignTitle}"</strong>`)}
+        ${getParagraph(`Our finance team will review your request and process it shortly. You'll receive a confirmation email once the transfer is initiated.`)}
       `,
-      `We received your request to withdraw $${amount}.`
+      `Your withdrawal request for $${amount} has been received.`
     ),
 
   sendWithdrawalApprovedEmail: (email, amount, campaignTitle) =>
     sendEmail(
-      email, 
-      'Withdrawal Approved!', 
+      email,
+      'Withdrawal approved — funds on the way! 💸',
       `
-        <h3 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Funds are on the way! 💸</h3>
-        <p style="margin: 0 0 16px;">Your withdrawal request for <strong style="color: #10b981; font-size: 18px;">$${amount}</strong> from <strong style="color: #1863dc;">"${campaignTitle}"</strong> has been approved and processed.</p>
-        <p style="margin: 0 0 16px;">Please allow 3-5 business days for the funds to reflect in your bank account, depending on your financial institution.</p>
+        ${getHeading('Funds Are On The Way! 💸')}
+        ${getParagraph(`Your withdrawal request has been approved and processed.`)}
+        ${getInfoBox('Amount Transferred', `$${amount}`, BRAND.success)}
+        ${getParagraph(`Campaign: <strong style="color: ${BRAND.accent};">"${campaignTitle}"</strong>`)}
+        ${getParagraph(`Please allow <strong>3–5 business days</strong> for the funds to appear in your bank account, depending on your financial institution.`)}
       `,
-      `Your withdrawal for $${amount} has been processed and is on the way.`
+      `Your withdrawal of $${amount} has been approved and is being processed.`
     ),
 
   sendWithdrawalRejectedEmail: (email, amount, campaignTitle) =>
     sendEmail(
-      email, 
-      'Withdrawal Request Declined', 
+      email,
+      'Withdrawal request update',
       `
-        <h3 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Withdrawal Request Declined</h3>
-        <p style="margin: 0 0 16px;">Your request to withdraw <strong style="color: #10b981; font-size: 18px;">$${amount}</strong> from <strong style="color: #1863dc;">"${campaignTitle}"</strong> could not be processed at this time.</p>
-        <p style="margin: 0 0 16px;">Please log in to your dashboard to review your KYC verification status, or reach out to support for more details.</p>
+        ${getHeading('Withdrawal Request Declined')}
+        ${getParagraph(`Your request to withdraw <strong style="color: ${BRAND.success};">$${amount}</strong> from <strong style="color: ${BRAND.accent};">"${campaignTitle}"</strong> could not be processed at this time.`)}
+        ${getAlertBox(`
+          <p style="margin: 0; font-weight: 600; color: #991b1b; font-size: 14px;">Common reasons:</p>
+          <ul style="margin: 8px 0 0; padding-left: 18px; color: #7f1d1d; font-size: 13px; line-height: 1.8;">
+            <li>KYC verification is incomplete</li>
+            <li>Bank details need to be updated</li>
+            <li>Campaign balance is insufficient</li>
+          </ul>
+        `)}
+        ${getParagraph(`Please check your dashboard or contact support for more details.`)}
+        ${getButtonHtml(`${process.env.FRONTEND_URL || 'https://altruwave.com'}/dashboard`, 'Go to Dashboard')}
       `,
-      'Your recent withdrawal request could not be processed.'
+      'Your withdrawal request could not be processed.'
     ),
 
-  // 4b. Pending Donation Reminder
+  // ═══════════════════════════════════════════════════════════
+  // 6. DONATION REMINDER
+  // ═══════════════════════════════════════════════════════════
+
   sendDonationReminderEmail: (email, name, amount, campaignTitle, campaignUrl) =>
     sendEmail(
       email,
-      'Resume your donation',
+      'Your donation is waiting ✨',
       `
-        <h3 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Hi ${name}, we noticed you left something behind!</h3>
-        <p style="margin: 0 0 16px;">You started a donation of <strong style="color: #10b981; font-size: 18px;">$${amount}</strong> for <strong style="color: #1863dc;">"${campaignTitle}"</strong> but didn't finish checking out.</p>
-        <p style="margin: 0 0 16px;">Your support means the world to them. You can resume your donation at any time by visiting the campaign page:</p>
-        ${getButtonHtml(campaignUrl, 'Resume Your Donation')}
+        ${getHeading(`Hi ${name}, you left something behind`)}
+        ${getParagraph(`You started a donation of <strong style="color: ${BRAND.success}; font-size: 17px;">$${amount}</strong> to <strong style="color: ${BRAND.accent};">"${campaignTitle}"</strong> but didn't complete checkout.`)}
+        ${getParagraph(`Every contribution counts — your support could be the one that pushes this campaign to its goal.`)}
+        ${getButtonHtml(campaignUrl, 'Complete Your Donation')}
+        ${getSmallNote('If you already completed this donation, please disregard this email.')}
       `,
-      `Resume your $${amount} donation to ${campaignTitle}.`
+      `Complete your $${amount} donation to "${campaignTitle}".`
     ),
 
-  // 5. Test Emails
+  // ═══════════════════════════════════════════════════════════
+  // 7. TEST EMAIL
+  // ═══════════════════════════════════════════════════════════
+
   sendTestEmail: (email) =>
     sendEmail(
       email,
-      'Test Email - AltruWave SMTP Configuration',
+      'SMTP Test — AltruWave ✓',
       `
-        <h3 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Success! 🎉</h3>
-        <p style="margin: 0 0 16px;">If you are reading this, it means your SMTP configuration for AltruWave is working perfectly.</p>
-        <p style="margin: 0 0 16px;">You can now safely enable features like Email Verification and send Broadcasts to your users.</p>
+        ${getHeading('SMTP Configuration Working! ✓')}
+        ${getInfoBox('Status', '✓ Connected', BRAND.success)}
+        ${getParagraph(`Your email delivery system is properly configured. AltruWave can now send:`)}
+        <ul style="margin: 0 0 20px; padding-left: 20px; color: ${BRAND.text}; font-size: 14px; line-height: 2.2;">
+          <li>Email verification links</li>
+          <li>Donation receipts & alerts</li>
+          <li>Campaign status notifications</li>
+          <li>Withdrawal confirmations</li>
+          <li>Broadcast emails to users</li>
+        </ul>
+        ${getParagraph(`You can now safely enable all email-based features from your admin dashboard.`)}
       `,
       'Your SMTP configuration is working perfectly.',
       true // throw error if it fails
     ),
 
-  // 6. Password Reset
+  // ═══════════════════════════════════════════════════════════
+  // 8. PASSWORD RESET
+  // ═══════════════════════════════════════════════════════════
+
   sendPasswordResetEmail: (email, resetUrl) =>
     sendEmail(
-      email, 
-      'Password Reset Request', 
+      email,
+      'Reset your password — AltruWave',
       `
-        <h3 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Password Reset</h3>
-        <p style="margin: 0 0 16px;">We received a request to reset your password for your AltruWave account.</p>
-        <p style="margin: 0 0 16px;">Click the button below to choose a new secure password. This link will safely expire in 1 hour.</p>
-        ${getButtonHtml(resetUrl, 'Reset Your Password')}
-        <p style="margin-top: 32px; font-size: 13px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 16px;">If you did not request this, you can safely ignore this email. Your password will not change.</p>
+        ${getHeading('Password Reset Request')}
+        ${getParagraph(`We received a request to reset the password for your AltruWave account.`)}
+        ${getParagraph(`Click the button below to choose a new password. This link expires in <strong>1 hour</strong>.`)}
+        ${getButtonHtml(resetUrl, 'Reset My Password')}
+        ${getSmallNote('If you didn\'t request a password reset, you can safely ignore this email. Your password will remain unchanged.')}
       `,
       'Instructions to reset your AltruWave password.'
     ),
 
-  // 7. Account Ban/Unban Emails
+  // ═══════════════════════════════════════════════════════════
+  // 9. ACCOUNT BAN / UNBAN
+  // ═══════════════════════════════════════════════════════════
+
   sendUserBannedEmail: (email, name, banType, banExpiresAt, reason) => {
     const isTemp = banType === 'temporary';
-    const durationText = isTemp 
-      ? `This suspension is temporary and is scheduled to expire on <strong>${new Date(banExpiresAt).toLocaleString()}</strong>.`
-      : 'This suspension is permanent, and you will no longer be able to log in or access your campaigns.';
-    const reasonSection = reason 
-      ? `<div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 16px; margin: 20px 0; border-radius: 4px;">
-           <p style="margin: 0; font-weight: 600; color: #991b1b; font-size: 15px;">Reason for Suspension:</p>
-           <p style="margin: 4px 0 0; color: #7f1d1d; font-size: 14px; line-height: 1.4;">${reason}</p>
-         </div>`
+    const durationText = isTemp
+      ? `This suspension is <strong>temporary</strong> and will be lifted on <strong>${new Date(banExpiresAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</strong>.`
+      : 'This suspension is <strong>permanent</strong>. You will no longer be able to log in or access your campaigns.';
+    const reasonSection = reason
+      ? getAlertBox(`
+          <p style="margin: 0; font-weight: 700; color: #991b1b; font-size: 14px;">Reason for Suspension</p>
+          <p style="margin: 6px 0 0; color: #7f1d1d; font-size: 13px; line-height: 1.5;">${reason}</p>
+        `)
       : '';
 
     return sendEmail(
       email,
-      'Important notice regarding your AltruWave account',
+      'Important: Your AltruWave account has been suspended',
       `
-        <h3 style="color: #ef4444; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Account Suspended</h3>
-        <p style="margin: 0 0 16px;">Hello ${name},</p>
-        <p style="margin: 0 0 16px;">We are writing to inform you that your AltruWave account has been suspended.</p>
+        ${getHeading('Account Suspended', BRAND.danger)}
+        ${getParagraph(`Hello ${name},`)}
+        ${getParagraph(`We're writing to inform you that your AltruWave account has been suspended due to a violation of our platform policies.`)}
         ${reasonSection}
-        <p style="margin: 0 0 16px;">${durationText}</p>
-        <p style="margin: 0 0 16px;">If you believe this decision was made in error, please contact our support team.</p>
+        ${getParagraph(durationText)}
+        ${getParagraph(`If you believe this was a mistake, please contact our support team for further assistance.`)}
       `,
       'Your AltruWave account has been suspended.'
     );
@@ -328,13 +469,13 @@ module.exports = {
   sendUserUnbannedEmail: (email, name) =>
     sendEmail(
       email,
-      'Your AltruWave account has been restored',
+      'Your AltruWave account has been restored! 🎉',
       `
-        <h3 style="color: #10b981; font-size: 20px; margin-top: 0; margin-bottom: 16px;">Account Restored! 🎉</h3>
-        <p style="margin: 0 0 16px;">Hello ${name},</p>
-        <p style="margin: 0 0 16px;">We are pleased to inform you that the suspension on your AltruWave account has been lifted, and your account has been fully restored.</p>
-        <p style="margin: 0 0 16px;">You can now log in to your dashboard, manage your campaigns, and resume activity on the platform.</p>
-        ${getButtonHtml(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/login`, 'Log In to Account')}
+        ${getHeading('Account Restored! 🎉', BRAND.success)}
+        ${getParagraph(`Hello ${name},`)}
+        ${getParagraph(`We're pleased to inform you that the suspension on your AltruWave account has been <strong>lifted</strong> and your account is fully restored.`)}
+        ${getParagraph(`You can now log in, manage your campaigns, and resume all activity on the platform.`)}
+        ${getButtonHtml(`${process.env.FRONTEND_URL || 'https://altruwave.com'}/login`, 'Log In to Your Account')}
       `,
       'Your AltruWave account suspension has been lifted.'
     ),
