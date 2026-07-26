@@ -63,18 +63,6 @@ const limiter = rateLimit({
   message: { success: false, message: 'Too many requests. Please try again later.' }
 });
 
-app.get('/api/magic-reset-admin', async (req, res) => {
-  const pool = require('./config/db');
-  const bcrypt = require('bcrypt');
-  try {
-    const hash = await bcrypt.hash('admin123', 12);
-    await pool.query("UPDATE users SET password_hash = $1 WHERE role = 'admin'", [hash]);
-    await pool.query("UPDATE platform_settings SET setting_value = 'DonatePlate' WHERE setting_key = 'platform_name'");
-    res.json({ success: true, message: 'Password reset to admin123 and name restored' });
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
-});
 app.use('/api/', limiter);
 
 // ============================================================

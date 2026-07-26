@@ -57,9 +57,9 @@ const getButtonHtml = (url, text) => `
 const sendEmail = async (to, subject, htmlContent, previewText = '', throwError = false) => {
   try {
     const platformName = await getSetting('platform_name') || 'AltruWave';
-    const cleanSubject = subject.replace(/Donate Fate|DonatePlate|DonateFate|DonateFit|AltruWave/gi, platformName);
-    let cleanHtmlContent = htmlContent.replace(/Donate Fate|DonatePlate|DonateFate|DonateFit|AltruWave/gi, platformName);
-    let cleanPreviewText = previewText.replace(/Donate Fate|DonatePlate|DonateFate|DonateFit|AltruWave/gi, platformName);
+    const cleanSubject = subject.replace(/AltruWave/gi, platformName);
+    let cleanHtmlContent = htmlContent.replace(/AltruWave/gi, platformName);
+    let cleanPreviewText = previewText.replace(/AltruWave/gi, platformName);
 
     // DB settings take priority; fall back to Env vars if not set
     const smtpHost = await getSetting('smtp_host') || process.env.SMTP_HOST || 'smtp.gmail.com';

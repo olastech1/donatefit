@@ -20,7 +20,7 @@ async function syncSettings() {
     for (const s of defaultSettings) {
       if (s.key === 'platform_name' || s.key === 'support_email') {
         // Just update existing misspellings if they haven't been changed significantly
-        await pool.query(`UPDATE platform_settings SET setting_value = $1 WHERE setting_key = $2 AND (setting_value ILIKE '%Donate Fate%' OR setting_value ILIKE '%DonatePlate%' OR setting_value ILIKE '%DonateFate%' OR setting_value ILIKE '%DonateFit%')`, [s.val, s.key]);
+        await pool.query(`UPDATE platform_settings SET setting_value = $1 WHERE setting_key = $2 AND setting_value != $1`, [s.val, s.key]);
       } else {
         await pool.query(`
           INSERT INTO platform_settings (setting_key, setting_value, is_encrypted, description)

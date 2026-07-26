@@ -1,6 +1,14 @@
+import { 
+  FiGrid, FiTrendingUp, FiActivity, FiUsers, FiFileText, FiShield,
+  FiDollarSign, FiCreditCard, FiLayout, FiMail, FiSettings, FiHome,
+  FiMenu, FiX, FiSearch, FiBell, FiLogOut, FiCheck, FiTrash2,
+  FiZap, FiEye, FiEdit, FiPause, FiPlay, FiSend, FiDownload,
+  FiSave, FiPlus, FiMinus, FiAlertCircle, FiExternalLink,
+  FiChevronRight, FiSlash, FiGlobe, FiRefreshCw
+} from 'react-icons/fi';
 import { useSettings } from '../context/SettingsContext';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useAuth } from '../context/AuthContext';
@@ -11,27 +19,27 @@ const NAV_GROUPS = [
   {
     label: 'Platform',
     items: [
-      { key: 'overview',   label: 'Overview',        icon: '▣' },
-      { key: 'analytics',  label: 'Analytics',       icon: '📈' },
-      { key: 'activity',   label: 'Activity Log',    icon: '🔄' },
+      { key: 'overview',   label: 'Overview',        icon: <FiGrid /> },
+      { key: 'analytics',  label: 'Analytics',       icon: <FiTrendingUp /> },
+      { key: 'activity',   label: 'Activity Log',    icon: <FiActivity /> },
     ]
   },
   {
     label: 'Management',
     items: [
-      { key: 'users',      label: 'Users',           icon: '👥' },
-      { key: 'campaigns',  label: 'Campaigns',       icon: '📋' },
-      { key: 'kyc',        label: 'KYC Reviews',     icon: '🛡️' },
-      { key: 'withdrawals',label: 'Withdrawals',     icon: '💸' },
-      { key: 'donations',  label: 'Donations',       icon: '💳' },
+      { key: 'users',      label: 'Users',           icon: <FiUsers /> },
+      { key: 'campaigns',  label: 'Campaigns',       icon: <FiFileText /> },
+      { key: 'kyc',        label: 'KYC Reviews',     icon: <FiShield /> },
+      { key: 'withdrawals',label: 'Withdrawals',     icon: <FiDollarSign /> },
+      { key: 'donations',  label: 'Donations',       icon: <FiCreditCard /> },
     ]
   },
   {
     label: 'Tools',
     items: [
-      { key: 'pages',      label: 'Pages',           icon: '📄' },
-      { key: 'broadcast',  label: 'Broadcast Email', icon: '📧' },
-      { key: 'settings',   label: 'Settings',        icon: '⚙️' },
+      { key: 'pages',      label: 'Pages',           icon: <FiLayout /> },
+      { key: 'broadcast',  label: 'Broadcast Email', icon: <FiMail /> },
+      { key: 'settings',   label: 'Settings',        icon: <FiSettings /> },
     ]
   },
 ];
@@ -41,6 +49,51 @@ const fmtMoney = (n) => `$${Number(n || 0).toLocaleString()}`;
 const fmtDate  = (d) => new Date(d).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
 const fmtTime  = (d) => new Date(d).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 const initials = (name = '') => name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+
+// ── Custom Dialogs ───────────────────────────────────────────
+const ConfirmDialog = ({ open, title, message, onConfirm, onCancel, confirmText = 'Confirm', danger = false }) => {
+  if (!open) return null;
+  return (
+    <div className="adm-modal-overlay" onClick={onCancel}>
+      <div className="adm-modal" onClick={e => e.stopPropagation()} style={{ maxWidth: 400 }}>
+        <div className="adm-modal-header">
+          <h3 className="adm-modal-title">{title}</h3>
+          <button className="adm-modal-close" onClick={onCancel}><FiX /></button>
+        </div>
+        <div className="adm-modal-body">
+          <p style={{ color: 'var(--adm-text-secondary)', fontSize: '0.9rem', lineHeight: 1.5 }}>{message}</p>
+        </div>
+        <div className="adm-modal-footer">
+          <button className="adm-btn secondary" onClick={onCancel}>Cancel</button>
+          <button className={`adm-btn ${danger ? 'danger' : 'primary'}`} onClick={onConfirm}>{confirmText}</button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const PromptDialog = ({ open, title, message, placeholder, onSubmit, onCancel, submitText = 'Submit' }) => {
+  const [val, setVal] = useState('');
+  if (!open) return null;
+  return (
+    <div className="adm-modal-overlay" onClick={onCancel}>
+      <div className="adm-modal" onClick={e => e.stopPropagation()} style={{ maxWidth: 420 }}>
+        <div className="adm-modal-header">
+          <h3 className="adm-modal-title">{title}</h3>
+          <button className="adm-modal-close" onClick={onCancel}><FiX /></button>
+        </div>
+        <div className="adm-modal-body">
+          {message && <p style={{ color: 'var(--adm-text-secondary)', fontSize: '0.9rem', marginBottom: 12 }}>{message}</p>}
+          <input className="adm-input" placeholder={placeholder} value={val} onChange={e => setVal(e.target.value)} autoFocus />
+        </div>
+        <div className="adm-modal-footer">
+          <button className="adm-btn secondary" onClick={onCancel}>Cancel</button>
+          <button className="adm-btn primary" onClick={() => { onSubmit(val); setVal(''); }}>{submitText}</button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 // ── Status badge helper ──────────────────────────────────────
 function Badge({ status }) {
@@ -87,7 +140,7 @@ function SettingField({ setting, onSave }) {
           <button className="adm-btn ghost sm" onClick={() => { setEditing(false); setValue(''); }}>Cancel</button>
         </div>
       ) : (
-        <button className="adm-btn secondary sm" onClick={() => { setValue(setting.display_value === '••••••••' ? '' : setting.display_value || ''); setEditing(true); }}>✏️ Edit</button>
+        <button className="adm-btn secondary sm" onClick={() => { setValue(setting.display_value === '••••••••' ? '' : setting.display_value || ''); setEditing(true); }}><FiEdit /> Edit</button>
       )}
     </div>
   );
@@ -99,10 +152,16 @@ export default function AdminDashboardPage() {
   const platformName = platformSettings?.platform_name || 'AltruWave';
   const { user } = useAuth();
   const navigate  = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   // Navigation
-  const [tab, setTab]             = useState('overview');
+  const tab = searchParams.get('tab') || 'overview';
+  const setTab = (t) => setSearchParams({ tab: t });
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Dialogs
+  const [confirmDialog, setConfirmDialog] = useState({ open: false, title: '', message: '', onConfirm: null, danger: false, confirmText: 'Confirm' });
+  const [promptDialog, setPromptDialog] = useState({ open: false, title: '', message: '', placeholder: '', onSubmit: null, submitText: 'Submit' });
 
   // Data state
   const [stats, setStats]         = useState(null);
@@ -141,6 +200,14 @@ export default function AdminDashboardPage() {
   const [profileLoading, setProfileLoading] = useState(false);
   const [verifyLoading, setVerifyLoading]   = useState(false);
   const [verifyResult, setVerifyResult]     = useState(null);
+
+  // Auto-dismiss alerts
+  useEffect(() => {
+    if (message.text) {
+      const timer = setTimeout(() => setMessage({ type: '', text: '' }), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
 
   // Reset search / filter on tab change
   useEffect(() => { setSearchQuery(''); setStatusFilter('all'); }, [tab]);
@@ -220,15 +287,24 @@ export default function AdminDashboardPage() {
     finally { setActionLoading(''); }
   };
 
-  const handleDeleteCampaign = async (id) => {
-    if (!window.confirm('Delete this campaign? This cannot be undone.')) return;
-    setActionLoading(`del-${id}`);
-    try {
-      await adminAPI.deleteCampaign(id);
-      setPending(prev => prev.filter(c => c.id !== id));
-      setMessage({ type: 'success', text: 'Campaign deleted.' });
-    } catch (err) { setMessage({ type: 'error', text: err.response?.data?.message || 'Failed.' }); }
-    finally { setActionLoading(''); }
+  const handleDeleteCampaign = (id) => {
+    setConfirmDialog({
+      open: true,
+      title: 'Delete Campaign',
+      message: 'Are you sure you want to permanently delete this campaign? This cannot be undone.',
+      danger: true,
+      confirmText: 'Delete',
+      onConfirm: async () => {
+        setConfirmDialog(prev => ({ ...prev, open: false }));
+        setActionLoading(`del-${id}`);
+        try {
+          await adminAPI.deleteCampaign(id);
+          setPending(prev => prev.filter(c => c.id !== id));
+          setMessage({ type: 'success', text: 'Campaign deleted.' });
+        } catch (err) { setMessage({ type: 'error', text: err.response?.data?.message || 'Failed.' }); }
+        finally { setActionLoading(''); }
+      }
+    });
   };
 
   const handleToggleSeo = async (id) => {
@@ -253,19 +329,27 @@ export default function AdminDashboardPage() {
     finally { setActionLoading(''); }
   };
 
-  const handleAddFunds = async (id, title) => {
-    const a = prompt(`Amount to add to "${title}" ($):`);
-    if (!a) return;
-    const amt = parseFloat(a);
-    if (isNaN(amt) || amt <= 0) { alert('Invalid amount.'); return; }
-    setActionLoading(`funds-${id}`);
-    try {
-      const res = await adminAPI.addFunds(id, amt);
-      const r   = await adminAPI.getAllCampaigns();
-      setPending(r.data.data);
-      setMessage({ type: 'success', text: res.data.message });
-    } catch (err) { setMessage({ type: 'error', text: err.response?.data?.message || 'Failed.' }); }
-    finally { setActionLoading(''); }
+  const handleAddFunds = (id, title) => {
+    setPromptDialog({
+      open: true,
+      title: 'Add Funds',
+      message: `Enter the amount to add to "${title}" ($):`,
+      placeholder: 'e.g. 100.00',
+      submitText: 'Add Funds',
+      onSubmit: async (val) => {
+        setPromptDialog(prev => ({ ...prev, open: false }));
+        const amt = parseFloat(val);
+        if (isNaN(amt) || amt <= 0) { alert('Invalid amount.'); return; }
+        setActionLoading(`funds-${id}`);
+        try {
+          const res = await adminAPI.addFunds(id, amt);
+          const r   = await adminAPI.getAllCampaigns();
+          setPending(r.data.data);
+          setMessage({ type: 'success', text: res.data.message });
+        } catch (err) { setMessage({ type: 'error', text: err.response?.data?.message || 'Failed.' }); }
+        finally { setActionLoading(''); }
+      }
+    });
   };
 
   const handleOpenAddUserFunds = async (id, name) => {
@@ -295,15 +379,24 @@ export default function AdminDashboardPage() {
     finally { setActionLoading(''); }
   };
 
-  const handleDeleteDonation = async (id) => {
-    if (!window.confirm('Delete this donation record?')) return;
-    setActionLoading(`del-don-${id}`);
-    try {
-      await adminAPI.deleteDonation(id);
-      setDonations(prev => prev.filter(d => d.id !== id));
-      setMessage({ type: 'success', text: 'Donation deleted.' });
-    } catch (err) { setMessage({ type: 'error', text: err.response?.data?.message || 'Failed.' }); }
-    finally { setActionLoading(''); }
+  const handleDeleteDonation = (id) => {
+    setConfirmDialog({
+      open: true,
+      title: 'Delete Donation',
+      message: 'Delete this donation record? This cannot be undone.',
+      danger: true,
+      confirmText: 'Delete',
+      onConfirm: async () => {
+        setConfirmDialog(prev => ({ ...prev, open: false }));
+        setActionLoading(`del-don-${id}`);
+        try {
+          await adminAPI.deleteDonation(id);
+          setDonations(prev => prev.filter(d => d.id !== id));
+          setMessage({ type: 'success', text: 'Donation deleted.' });
+        } catch (err) { setMessage({ type: 'error', text: err.response?.data?.message || 'Failed.' }); }
+        finally { setActionLoading(''); }
+      }
+    });
   };
 
   const handleUserBan = async (e) => {
@@ -320,26 +413,42 @@ export default function AdminDashboardPage() {
     finally { setActionLoading(''); }
   };
 
-  const handleUserUnban = async (id, name) => {
-    if (!window.confirm(`Unban "${name}"?`)) return;
-    setActionLoading(`user-unban-${id}`);
-    try {
-      const res = await adminAPI.unbanUser(id);
-      setMessage({ type: 'success', text: res.data.message });
-      const r = await adminAPI.getUsers(); setUsersList(r.data.data);
-    } catch (err) { setMessage({ type: 'error', text: err.response?.data?.message || 'Failed.' }); }
-    finally { setActionLoading(''); }
+  const handleUserUnban = (id, name) => {
+    setConfirmDialog({
+      open: true,
+      title: 'Unban User',
+      message: `Are you sure you want to unban "${name}"?`,
+      confirmText: 'Unban',
+      onConfirm: async () => {
+        setConfirmDialog(prev => ({ ...prev, open: false }));
+        setActionLoading(`user-unban-${id}`);
+        try {
+          const res = await adminAPI.unbanUser(id);
+          setMessage({ type: 'success', text: res.data.message });
+          const r = await adminAPI.getUsers(); setUsersList(r.data.data);
+        } catch (err) { setMessage({ type: 'error', text: err.response?.data?.message || 'Failed.' }); }
+        finally { setActionLoading(''); }
+      }
+    });
   };
 
-  const handleVerifyUser = async (id, name) => {
-    if (!window.confirm(`Manually verify email for user "${name}"?`)) return;
-    setActionLoading(`verify-${id}`);
-    try {
-      const res = await adminAPI.verifyUser(id);
-      setMessage({ type: 'success', text: res.data.message });
-      const r = await adminAPI.getUsers(); setUsersList(r.data.data);
-    } catch (err) { setMessage({ type: 'error', text: err.response?.data?.message || 'Failed.' }); }
-    finally { setActionLoading(''); }
+  const handleVerifyUser = (id, name) => {
+    setConfirmDialog({
+      open: true,
+      title: 'Verify User Email',
+      message: `Manually verify email for user "${name}"?`,
+      confirmText: 'Verify',
+      onConfirm: async () => {
+        setConfirmDialog(prev => ({ ...prev, open: false }));
+        setActionLoading(`verify-${id}`);
+        try {
+          const res = await adminAPI.verifyUser(id);
+          setMessage({ type: 'success', text: res.data.message });
+          const r = await adminAPI.getUsers(); setUsersList(r.data.data);
+        } catch (err) { setMessage({ type: 'error', text: err.response?.data?.message || 'Failed.' }); }
+        finally { setActionLoading(''); }
+      }
+    });
   };
 
   const handleWithdrawalAction = async (id, action, method = 'manual') => {
@@ -421,21 +530,39 @@ export default function AdminDashboardPage() {
     finally { setActionLoading(null); }
   };
 
-  const handleTestEmail = async () => {
-    const email = prompt('Enter email address to send test to:');
-    if (!email) return;
-    setActionLoading('test-email');
-    try { await adminAPI.testEmail({ to: email }); setMessage({ type: 'success', text: `Test email sent to ${email}.` }); }
-    catch (err) { setMessage({ type: 'error', text: err.response?.data?.message || 'Failed to send test email.' }); }
-    finally { setActionLoading(null); }
+  const handleTestEmail = () => {
+    setPromptDialog({
+      open: true,
+      title: 'Test Email',
+      message: 'Enter email address to send test to:',
+      placeholder: 'e.g. test@example.com',
+      submitText: 'Send',
+      onSubmit: async (email) => {
+        setPromptDialog(prev => ({ ...prev, open: false }));
+        if (!email) return;
+        setActionLoading('test-email');
+        try { await adminAPI.testEmail({ to: email }); setMessage({ type: 'success', text: `Test email sent to ${email}.` }); }
+        catch (err) { setMessage({ type: 'error', text: err.response?.data?.message || 'Failed to send test email.' }); }
+        finally { setActionLoading(null); }
+      }
+    });
   };
 
-  const handleDeleteUser = async (id) => {
-    if (!window.confirm('Delete this user? Cannot be undone.')) return;
-    setActionLoading(`user-del-${id}`);
-    try { await adminAPI.deleteUser(id); setUsersList(prev => prev.filter(u => u.id !== id)); setMessage({ type: 'success', text: 'User deleted.' }); }
-    catch (err) { setMessage({ type: 'error', text: err.response?.data?.message || 'Failed.' }); }
-    finally { setActionLoading(''); }
+  const handleDeleteUser = (id) => {
+    setConfirmDialog({
+      open: true,
+      title: 'Delete User',
+      message: 'Delete this user? This cannot be undone.',
+      danger: true,
+      confirmText: 'Delete',
+      onConfirm: async () => {
+        setConfirmDialog(prev => ({ ...prev, open: false }));
+        setActionLoading(`user-del-${id}`);
+        try { await adminAPI.deleteUser(id); setUsersList(prev => prev.filter(u => u.id !== id)); setMessage({ type: 'success', text: 'User deleted.' }); }
+        catch (err) { setMessage({ type: 'error', text: err.response?.data?.message || 'Failed.' }); }
+        finally { setActionLoading(''); }
+      }
+    });
   };
 
   const exportDonationsCSV = () => {
@@ -490,7 +617,7 @@ export default function AdminDashboardPage() {
       <aside className={`adm-sidebar ${sidebarOpen ? 'open' : ''}`}>
         {/* Logo */}
         <div className="adm-logo">
-          <div className="adm-logo-mark">🍽️</div>
+          <div className="adm-logo-mark"><FiZap /></div>
           <span className="adm-logo-text">{platformName}</span>
           <span className="adm-logo-badge">Admin</span>
         </div>
@@ -530,7 +657,7 @@ export default function AdminDashboardPage() {
         {/* Footer */}
         <div className="adm-sidebar-footer">
           <button className="adm-logout-btn" onClick={() => navigate('/')}>
-            <span>🏠</span> Back to Site
+            <span><FiHome /></span> Back to Site
           </button>
         </div>
       </aside>
@@ -541,7 +668,7 @@ export default function AdminDashboardPage() {
         {/* Top Bar */}
         <header className="adm-topbar">
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <button className="adm-menu-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>☰</button>
+            <button className="adm-menu-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}><FiMenu /></button>
             <div className="adm-breadcrumb">
               <span>{platformName}</span>
               <span className="adm-breadcrumb-sep">/</span>
@@ -553,7 +680,7 @@ export default function AdminDashboardPage() {
           <div className="adm-topbar-right">
             {totalPendingActions > 0 && (
               <div className="adm-topbar-btn" title={`${totalPendingActions} pending actions`}>
-                🔔
+                <FiBell />
                 <span className="adm-notif-dot" />
               </div>
             )}
@@ -574,7 +701,7 @@ export default function AdminDashboardPage() {
           {/* Alert */}
           {message.text && (
             <div className={`adm-alert ${message.type}`}>
-              {message.type === 'success' ? '✅' : '❌'} {message.text}
+              {message.type === 'success' ? <FiCheck /> : <FiX />} {message.text}
             </div>
           )}
 
@@ -591,29 +718,29 @@ export default function AdminDashboardPage() {
                   {/* Stat Cards */}
                   <div className="adm-stats-grid">
                     <div className="adm-stat-card blue">
-                      <div className="adm-stat-icon">👥</div>
+                      <div className="adm-stat-icon"><FiUsers /></div>
                       <div className="adm-stat-value">{(stats.users?.total || 0).toLocaleString()}</div>
                       <div className="adm-stat-label">Total Users</div>
                     </div>
                     <div className="adm-stat-card emerald">
-                      <div className="adm-stat-icon">💰</div>
+                      <div className="adm-stat-icon"><FiDollarSign /></div>
                       <div className="adm-stat-value">{fmtMoney(stats.donations?.total_raised)}</div>
                       <div className="adm-stat-label">Total Raised</div>
                     </div>
                     <div className="adm-stat-card rose">
-                      <div className="adm-stat-icon">📋</div>
+                      <div className="adm-stat-icon"><FiFileText /></div>
                       <div className="adm-stat-value">{(stats.campaigns?.active || 0).toLocaleString()}</div>
                       <div className="adm-stat-label">Active Campaigns</div>
                     </div>
                     <div className="adm-stat-card amber">
-                      <div className="adm-stat-icon">⚡</div>
+                      <div className="adm-stat-icon"><FiZap /></div>
                       <div className="adm-stat-value">{totalPendingActions}</div>
                       <div className="adm-stat-label">Pending Actions</div>
                     </div>
                   </div>
 
                   {/* Main grid */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '18px', marginBottom: '18px', flexWrap: 'wrap' }}>
+                  <div className="adm-grid-overview">
 
                     {/* Revenue chart */}
                     <div className="adm-chart-card">
@@ -627,7 +754,9 @@ export default function AdminDashboardPage() {
                               const pct = (Number(day.total) / max) * 100;
                               return (
                                 <div key={i} className="adm-bar-col">
-                                  <div className="adm-bar" style={{ height: `${Math.max(pct, 4)}%` }} data-val={fmtMoney(day.total)} />
+                                  <div className="adm-bar" style={{ height: `${Math.max(pct, 4)}%` }} data-val={fmtMoney(day.total)}>
+                                    <span className="adm-bar-val">{fmtMoney(day.total)}</span>
+                                  </div>
                                   <div className="adm-bar-lbl">
                                     {new Date(day.date).toLocaleDateString(undefined, { weekday: 'short' })}
                                   </div>
@@ -681,10 +810,10 @@ export default function AdminDashboardPage() {
                         <div className="adm-card-body" style={{ paddingTop: '14px' }}>
                           <div className="adm-quick-grid">
                             {[
-                              { key: 'campaigns', icon: '📋', label: 'Campaigns' },
-                              { key: 'kyc',       icon: '🛡️', label: 'KYC' },
-                              { key: 'withdrawals',icon: '💸', label: 'Payouts' },
-                              { key: 'users',     icon: '👥', label: 'Users' },
+                              { key: 'campaigns', icon: <FiFileText />, label: 'Campaigns' },
+                              { key: 'kyc',       icon: <FiShield />, label: 'KYC' },
+                              { key: 'withdrawals',icon: <FiDollarSign />, label: 'Payouts' },
+                              { key: 'users',     icon: <FiUsers />, label: 'Users' },
                             ].map(a => (
                               <button key={a.key} className="adm-quick-btn" onClick={() => setTab(a.key)}>
                                 <span className="adm-quick-btn-icon">{a.icon}</span>
@@ -698,7 +827,7 @@ export default function AdminDashboardPage() {
                   </div>
 
                   {/* Stats row 2 */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '18px', marginBottom: '18px' }}>
+                  <div className="adm-grid-3">
                     <div className="adm-card">
                       <div className="adm-card-body" style={{ textAlign: 'center', padding: '24px' }}>
                         <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#6366F1', fontFamily: 'var(--font-display)' }}>{stats.campaigns?.total || 0}</div>
@@ -723,7 +852,7 @@ export default function AdminDashboardPage() {
                   <div className="adm-card">
                     <div className="adm-card-header">
                       <span className="adm-card-title">Recent Activity</span>
-                      <button className="adm-btn secondary sm" onClick={() => setTab('activity')}>View All →</button>
+                      <button className="adm-btn secondary sm" onClick={() => setTab('activity')}>View All <FiChevronRight /></button>
                     </div>
                     <div className="adm-card-body">
                       {activityLog.length === 0 ? (
@@ -733,7 +862,7 @@ export default function AdminDashboardPage() {
                           {activityLog.map(log => (
                             <div key={log.id} className="adm-activity-row">
                               <div className={`adm-activity-icon ${log.type}`}>
-                                {log.type === 'donation' ? '💰' : log.type === 'campaign' ? '🎯' : log.type === 'user' ? '👤' : '💸'}
+                                {log.type === 'donation' ? <FiDollarSign /> : log.type === 'campaign' ? <FiFileText /> : log.type === 'user' ? <FiUsers /> : log.type === 'withdrawal' ? <FiCreditCard /> : <FiActivity />}
                               </div>
                               <div style={{ flex: 1 }}>
                                 <div className="adm-activity-text">{log.text}</div>
@@ -752,19 +881,19 @@ export default function AdminDashboardPage() {
               {/* ══ ANALYTICS ═══════════════════════════════════ */}
               {tab === 'analytics' && analytics && (
                 <div className="adm-animate">
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px', marginBottom: '18px' }}>
+                  <div className="adm-grid-2">
 
                     {/* Top Campaigns */}
                     <div className="adm-card">
-                      <div className="adm-card-header"><span className="adm-card-title">🏆 Top Campaigns</span></div>
+                      <div className="adm-card-header"><span className="adm-card-title"><FiTrendingUp /> Top Campaigns</span></div>
                       <div className="adm-card-body">
                         {analytics.topCampaigns?.map((c, i) => {
                           const pct = Math.min(100, (Number(c.current_amount) / Number(c.goal_amount)) * 100);
                           return (
                             <div key={c.id} style={{ marginBottom: '16px' }}>
                               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
-                                <span style={{ fontWeight: 600, fontSize: '0.85rem', color: '#0f172a' }}>
-                                  {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i+1}.`} {c.title}
+                                <span style={{ fontWeight: 600, fontSize: '0.85rem', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                  <span className="adm-rank">{i + 1}</span> {c.title}
                                 </span>
                                 <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#10b981' }}>{fmtMoney(c.current_amount)}</span>
                               </div>
@@ -779,7 +908,7 @@ export default function AdminDashboardPage() {
 
                     {/* Top Donors */}
                     <div className="adm-card">
-                      <div className="adm-card-header"><span className="adm-card-title">💎 Top Donors</span></div>
+                      <div className="adm-card-header"><span className="adm-card-title"><FiDollarSign /> Top Donors</span></div>
                       <div className="adm-card-body">
                         <div className="adm-table-wrap">
                           <table className="adm-table">
@@ -787,7 +916,7 @@ export default function AdminDashboardPage() {
                             <tbody>
                               {analytics.topDonors?.map((d, i) => (
                                 <tr key={i}>
-                                  <td>{i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : i + 1}</td>
+                                  <td><span className="adm-rank">{i + 1}</span></td>
                                   <td><strong>{d.name}</strong></td>
                                   <td style={{ color: '#6366F1', fontWeight: 700 }}>{fmtMoney(d.total_donated)}</td>
                                 </tr>
@@ -802,7 +931,7 @@ export default function AdminDashboardPage() {
 
                   {/* Category breakdown */}
                   <div className="adm-card">
-                    <div className="adm-card-header"><span className="adm-card-title">📊 Campaigns by Category</span></div>
+                    <div className="adm-card-header"><span className="adm-card-title"><FiGrid /> Campaigns by Category</span></div>
                     <div className="adm-card-body">
                       <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                         {analytics.categoryBreakdown?.map((cat, i) => {
@@ -828,13 +957,13 @@ export default function AdminDashboardPage() {
                   <div className="adm-card-header"><span className="adm-card-title">Platform Activity</span></div>
                   <div className="adm-card-body">
                     {activityLog.length === 0 ? (
-                      <div className="adm-empty"><div className="adm-empty-icon">🔄</div><div className="adm-empty-title">No activity yet</div><div className="adm-empty-sub">Events will appear here as users interact with the platform.</div></div>
+                      <div className="adm-empty"><div className="adm-empty-icon"><FiActivity /></div><div className="adm-empty-title">No activity yet</div><div className="adm-empty-sub">Events will appear here as users interact with the platform.</div></div>
                     ) : (
                       <div className="adm-activity-list">
                         {activityLog.map(log => (
                           <div key={log.id} className="adm-activity-row">
                             <div className={`adm-activity-icon ${log.type}`}>
-                              {log.type === 'donation' ? '💰' : log.type === 'campaign' ? '🎯' : log.type === 'user' ? '👤' : '💸'}
+                              {log.type === 'donation' ? <FiDollarSign /> : log.type === 'campaign' ? <FiFileText /> : log.type === 'user' ? <FiUsers /> : log.type === 'withdrawal' ? <FiCreditCard /> : <FiActivity />}
                             </div>
                             <div style={{ flex: 1 }}>
                               <div className="adm-activity-text">{log.text}</div>
@@ -854,7 +983,8 @@ export default function AdminDashboardPage() {
                 <div className="adm-animate">
                   <div className="adm-filters">
                     <div className="adm-search-wrap">
-                      <input type="text" placeholder="Search by name or email…" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+                      <FiSearch style={{ position: 'absolute', left: '12px', top: '10px', color: '#94a3b8' }} />
+                      <input type="text" placeholder="Search by name or email…" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} style={{ paddingLeft: '36px' }} />
                     </div>
                     <select className="adm-filter-select" value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
                       <option value="all">All Roles</option>
@@ -879,12 +1009,12 @@ export default function AdminDashboardPage() {
                         </thead>
                         <tbody>
                           {filteredUsers.length === 0 ? (
-                            <tr><td colSpan={7}><div className="adm-empty"><div className="adm-empty-icon">👥</div><div className="adm-empty-title">No users found</div></div></td></tr>
+                            <tr><td colSpan={7}><div className="adm-empty"><div className="adm-empty-icon"><FiUsers /></div><div className="adm-empty-title">No users found</div></div></td></tr>
                           ) : filteredUsers.map(u => (
                             <tr key={u.id}>
                               <td>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, #6366F1, #F59E0B)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.72rem', fontWeight: 700, color: '#fff', flexShrink: 0 }}>
+                                  <div className="adm-avatar-sm" style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, #6366F1, #F59E0B)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.72rem', fontWeight: 700, color: '#fff', flexShrink: 0 }}>
                                     {initials(u.name)}
                                   </div>
                                   <strong>{u.name}</strong>
@@ -892,21 +1022,21 @@ export default function AdminDashboardPage() {
                               </td>
                               <td style={{ color: '#64748b' }}>{u.email}</td>
                               <td><Badge status={u.role} /></td>
-                              <td><Badge status={u.kyc_status || 'none'} /> {u.email_verified && <span style={{ color: '#10b981', fontSize: '0.8rem' }}>✅ Verified</span>}</td>
+                              <td><Badge status={u.kyc_status || 'none'} /> {u.email_verified && <span style={{ color: '#10b981', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}><FiCheck /> Verified</span>}</td>
                               <td style={{ color: '#94a3b8', fontSize: '0.8rem' }}>{fmtDate(u.created_at)}</td>
                               <td>{u.is_banned ? <Badge status="banned" /> : <span style={{ color: '#10b981', fontSize: '0.75rem', fontWeight: 600 }}>Active</span>}</td>
                               <td>
                                 <div style={{ display: 'flex', gap: '6px', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
                                   {!u.email_verified && (
-                                    <button className="adm-btn primary xs" onClick={() => handleVerifyUser(u.id, u.name)} disabled={actionLoading === `verify-${u.id}`}>Verify Email</button>
+                                    <button className="adm-btn primary xs" onClick={() => handleVerifyUser(u.id, u.name)} disabled={actionLoading === `verify-${u.id}`}><FiCheck /> Verify Email</button>
                                   )}
                                   {u.is_banned ? (
-                                    <button className="adm-btn success xs" onClick={() => handleUserUnban(u.id, u.name)} disabled={actionLoading === `user-unban-${u.id}`}>Unban</button>
+                                    <button className="adm-btn success xs" onClick={() => handleUserUnban(u.id, u.name)} disabled={actionLoading === `user-unban-${u.id}`}><FiCheck /> Unban</button>
                                   ) : (
-                                    <button className="adm-btn danger xs" onClick={() => { setSelectedUserId(u.id); setSelectedUserName(u.name); setShowBanModal(true); }}>Ban</button>
+                                    <button className="adm-btn danger xs" onClick={() => { setSelectedUserId(u.id); setSelectedUserName(u.name); setShowBanModal(true); }}><FiSlash /> Ban</button>
                                   )}
-                                  <button className="adm-btn secondary xs" onClick={() => handleOpenAddUserFunds(u.id, u.name)} disabled={!!actionLoading}>💵</button>
-                                  <button className="adm-btn danger xs" onClick={() => handleDeleteUser(u.id)} disabled={actionLoading === `user-del-${u.id}`}>🗑️</button>
+                                  <button className="adm-btn secondary xs" onClick={() => handleOpenAddUserFunds(u.id, u.name)} disabled={!!actionLoading}><FiDollarSign /></button>
+                                  <button className="adm-btn danger xs" onClick={() => handleDeleteUser(u.id)} disabled={actionLoading === `user-del-${u.id}`}><FiTrash2 /></button>
                                 </div>
                               </td>
                             </tr>
@@ -923,7 +1053,8 @@ export default function AdminDashboardPage() {
                 <div className="adm-animate">
                   <div className="adm-filters">
                     <div className="adm-search-wrap">
-                      <input type="text" placeholder="Search by title or creator…" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+                      <FiSearch style={{ position: 'absolute', left: '12px', top: '10px', color: '#94a3b8' }} />
+                      <input type="text" placeholder="Search by title or creator…" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} style={{ paddingLeft: '36px' }} />
                     </div>
                     <select className="adm-filter-select" value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
                       <option value="all">All Status</option>
@@ -935,13 +1066,13 @@ export default function AdminDashboardPage() {
                   </div>
 
                   {filteredCampaigns.length === 0 ? (
-                    <div className="adm-card"><div className="adm-empty"><div className="adm-empty-icon">📋</div><div className="adm-empty-title">No campaigns found</div><div className="adm-empty-sub">Try adjusting your filter.</div></div></div>
+                    <div className="adm-card"><div className="adm-empty"><div className="adm-empty-icon"><FiFileText /></div><div className="adm-empty-title">No campaigns found</div><div className="adm-empty-sub">Try adjusting your filter.</div></div></div>
                   ) : filteredCampaigns.map(c => {
                     const pct = Math.min(100, (Number(c.current_amount) / Number(c.goal_amount)) * 100);
                     return (
                       <div key={c.id} className="adm-campaign-card">
                         <div className="adm-campaign-thumb">
-                          {c.cover_image_url ? <img src={c.cover_image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '10px' }} /> : '📋'}
+                          {c.cover_image_url ? <img src={c.cover_image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '10px' }} /> : <FiFileText />}
                         </div>
                         <div className="adm-campaign-info">
                           <div className="adm-campaign-title">{c.title}</div>
@@ -953,26 +1084,26 @@ export default function AdminDashboardPage() {
                               <div className="adm-progress" style={{ width: '120px' }}><div className="adm-progress-fill" style={{ width: `${pct}%` }} /></div>
                             </div>
                             <Badge status={c.status} />
-                            <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>SEO: {c.seo_visible ? '✅' : '🚫'}</span>
+                            <span style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '4px' }}>SEO: {c.seo_visible ? <FiCheck /> : <FiSlash />}</span>
                           </div>
                         </div>
                         <div className="adm-campaign-actions">
                           {c.status === 'pending' && (
                             <>
-                              <button className="adm-btn success sm" onClick={() => handleCampaignAction(c.id, 'approve')} disabled={actionLoading === c.id}>✓ Approve</button>
-                              <button className="adm-btn danger sm" onClick={() => handleCampaignAction(c.id, 'reject')} disabled={actionLoading === c.id}>✕ Reject</button>
+                              <button className="adm-btn success sm" onClick={() => handleCampaignAction(c.id, 'approve')} disabled={actionLoading === c.id}><FiCheck /> Approve</button>
+                              <button className="adm-btn danger sm" onClick={() => handleCampaignAction(c.id, 'reject')} disabled={actionLoading === c.id}><FiX /> Reject</button>
                             </>
                           )}
                           {(c.status === 'active' || c.status === 'paused') && (
                             <button className="adm-btn secondary sm" onClick={() => handleToggleCampaign(c.id)} disabled={!!actionLoading}>
-                              {c.status === 'active' ? '⏸ Pause' : '▶ Activate'}
+                              {c.status === 'active' ? <><FiPause /> Pause</> : <><FiPlay /> Activate</>}
                             </button>
                           )}
                           <button className="adm-btn ghost sm" onClick={() => handleToggleSeo(c.id)} disabled={!!actionLoading}>
-                            {c.seo_visible ? '🚫 SEO' : '✅ SEO'}
+                            {c.seo_visible ? <><FiSlash /> SEO</> : <><FiGlobe /> SEO</>}
                           </button>
-                          <button className="adm-btn secondary sm" onClick={() => handleAddFunds(c.id, c.title)} disabled={!!actionLoading}>💵</button>
-                          <button className="adm-btn danger sm" onClick={() => handleDeleteCampaign(c.id)} disabled={actionLoading === `del-${c.id}`}>🗑️</button>
+                          <button className="adm-btn secondary sm" onClick={() => handleAddFunds(c.id, c.title)} disabled={!!actionLoading}><FiDollarSign /></button>
+                          <button className="adm-btn danger sm" onClick={() => handleDeleteCampaign(c.id)} disabled={actionLoading === `del-${c.id}`}><FiTrash2 /></button>
                         </div>
                       </div>
                     );
@@ -984,7 +1115,7 @@ export default function AdminDashboardPage() {
               {tab === 'kyc' && (
                 <div className="adm-animate">
                   {kycList.length === 0 ? (
-                    <div className="adm-card"><div className="adm-empty"><div className="adm-empty-icon">🛡️</div><div className="adm-empty-title">No KYC submissions</div><div className="adm-empty-sub">KYC submissions will appear here.</div></div></div>
+                    <div className="adm-card"><div className="adm-empty"><div className="adm-empty-icon"><FiShield /></div><div className="adm-empty-title">No KYC submissions</div><div className="adm-empty-sub">KYC submissions will appear here.</div></div></div>
                   ) : kycList.map(k => (
                     <div key={k.id} className="adm-card" style={{ marginBottom: '14px' }}>
                       <div className="adm-card-body">
@@ -998,14 +1129,14 @@ export default function AdminDashboardPage() {
                             <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>Submitted: {fmtTime(k.submitted_at)}</div>
                             {k.document_url && (
                               <button className="adm-btn secondary sm" style={{ marginTop: '10px' }} onClick={() => setPreviewDocument(k.document_url)}>
-                                📄 View Document
+                                <FiEye /> View Document
                               </button>
                             )}
                           </div>
                           {k.kyc_status === 'pending' && (
                             <div style={{ display: 'flex', gap: '8px' }}>
-                              <button className="adm-btn success" onClick={() => handleKycAction(k.id, 'approve')} disabled={actionLoading === `kyc-${k.id}`}>✓ Approve</button>
-                              <button className="adm-btn danger" onClick={() => handleKycAction(k.id, 'reject')} disabled={actionLoading === `kyc-${k.id}`}>✕ Reject</button>
+                              <button className="adm-btn success" onClick={() => handleKycAction(k.id, 'approve')} disabled={actionLoading === `kyc-${k.id}`}><FiCheck /> Approve</button>
+                              <button className="adm-btn danger" onClick={() => handleKycAction(k.id, 'reject')} disabled={actionLoading === `kyc-${k.id}`}><FiX /> Reject</button>
                             </div>
                           )}
                         </div>
@@ -1019,7 +1150,7 @@ export default function AdminDashboardPage() {
               {tab === 'withdrawals' && (
                 <div className="adm-animate">
                   {withdrawals.length === 0 ? (
-                    <div className="adm-card"><div className="adm-empty"><div className="adm-empty-icon">💸</div><div className="adm-empty-title">No pending withdrawals</div><div className="adm-empty-sub">All clear!</div></div></div>
+                    <div className="adm-card"><div className="adm-empty"><div className="adm-empty-icon"><FiDollarSign /></div><div className="adm-empty-title">No pending withdrawals</div><div className="adm-empty-sub">All clear!</div></div></div>
                   ) : withdrawals.map(w => (
                     <div key={w.id} className="adm-card" style={{ marginBottom: '14px' }}>
                       <div className="adm-card-body">
@@ -1037,9 +1168,9 @@ export default function AdminDashboardPage() {
                           </div>
                           {w.status === 'pending' && (
                             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                              <button className="adm-btn success" onClick={() => handleWithdrawalAction(w.id, 'approve', 'stripe')} disabled={actionLoading === w.id}>⚡ Auto-Pay</button>
-                              <button className="adm-btn secondary" onClick={() => handleWithdrawalAction(w.id, 'approve', 'manual')} disabled={actionLoading === w.id}>✓ Manual</button>
-                              <button className="adm-btn danger" onClick={() => handleWithdrawalAction(w.id, 'reject')} disabled={actionLoading === w.id}>✕ Reject</button>
+                              <button className="adm-btn success" onClick={() => handleWithdrawalAction(w.id, 'approve', 'stripe')} disabled={actionLoading === w.id}><FiZap /> Auto-Pay</button>
+                              <button className="adm-btn secondary" onClick={() => handleWithdrawalAction(w.id, 'approve', 'manual')} disabled={actionLoading === w.id}><FiCheck /> Manual</button>
+                              <button className="adm-btn danger" onClick={() => handleWithdrawalAction(w.id, 'reject')} disabled={actionLoading === w.id}><FiX /> Reject</button>
                             </div>
                           )}
                         </div>
@@ -1053,11 +1184,11 @@ export default function AdminDashboardPage() {
               {tab === 'donations' && (
                 <div className="adm-animate">
                   {/* Verify & Remind banners */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px', marginBottom: '18px' }}>
+                  <div className="adm-grid-auto">
                     
-                    <div className="adm-card" style={{ background: 'linear-gradient(135deg, #f0fdf4, #dcfce7)', border: '1px solid #86efac', height: '100%' }}>
+                    <div className="adm-card adm-banner-success">
                       <div className="adm-card-body" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                        <div style={{ fontWeight: 700, color: '#166534', marginBottom: '2px' }}>🔍 Verify Pending Payments</div>
+                        <div style={{ fontWeight: 700, color: '#166534', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '6px' }}><FiSearch /> Verify Pending Payments</div>
                         <div style={{ fontSize: '0.82rem', color: '#15803d', flex: 1 }}>Cross-check Stripe and auto-confirm paid donations.</div>
                         {verifyResult && (
                           <div style={{ marginTop: '8px', display: 'flex', gap: '16px' }}>
@@ -1079,13 +1210,13 @@ export default function AdminDashboardPage() {
                             } catch (err) { setMessage({ type: 'error', text: err.response?.data?.message || 'Verification failed.' }); }
                             finally { setVerifyLoading(false); }
                           }}
-                        >{verifyLoading ? '⏳ Verifying…' : '✅ Verify Now'}</button>
+                        >{verifyLoading ? '⏳ Verifying…' : <><FiCheck /> Verify Now</>}</button>
                       </div>
                     </div>
 
-                    <div className="adm-card" style={{ background: 'linear-gradient(135deg, #eff6ff, #dbeafe)', border: '1px solid #93c5fd', height: '100%' }}>
+                    <div className="adm-card adm-banner-info">
                       <div className="adm-card-body" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                        <div style={{ fontWeight: 700, color: '#1e3a8a', marginBottom: '2px' }}>📧 Remind Pending Donors</div>
+                        <div style={{ fontWeight: 700, color: '#1e3a8a', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '6px' }}><FiMail /> Remind Pending Donors</div>
                         <div style={{ fontSize: '0.82rem', color: '#1d4ed8', flex: 1 }}>Send email reminders to users who started but didn't complete a donation.</div>
                         <button
                           className="adm-btn primary"
@@ -1099,14 +1230,15 @@ export default function AdminDashboardPage() {
                             } catch (err) { setMessage({ type: 'error', text: err.response?.data?.message || 'Failed to send reminders.' }); }
                             finally { setActionLoading(''); }
                           }}
-                        >{actionLoading === 'remind' ? '⏳ Sending…' : '📨 Send Reminders'}</button>
+                        >{actionLoading === 'remind' ? '⏳ Sending…' : <><FiSend /> Send Reminders</>}</button>
                       </div>
                     </div>
                   </div>
 
                   <div className="adm-filters">
                     <div className="adm-search-wrap">
-                      <input type="text" placeholder="Search by campaign or donor…" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+                      <FiSearch style={{ position: 'absolute', left: '12px', top: '10px', color: '#94a3b8' }} />
+                      <input type="text" placeholder="Search by campaign or donor…" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} style={{ paddingLeft: '36px' }} />
                     </div>
                     <select className="adm-filter-select" value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
                       <option value="all">All Status</option>
@@ -1114,7 +1246,7 @@ export default function AdminDashboardPage() {
                       <option value="pending">Pending</option>
                       <option value="failed">Failed</option>
                     </select>
-                    <button className="adm-btn secondary" onClick={exportDonationsCSV}>📥 Export CSV</button>
+                    <button className="adm-btn secondary" onClick={exportDonationsCSV}><FiDownload /> Export CSV</button>
                   </div>
 
                   <div className="adm-card">
@@ -1132,7 +1264,7 @@ export default function AdminDashboardPage() {
                         </thead>
                         <tbody>
                           {filteredDonations.length === 0 ? (
-                            <tr><td colSpan={6}><div className="adm-empty"><div className="adm-empty-icon">💳</div><div className="adm-empty-title">No donations found</div></div></td></tr>
+                            <tr><td colSpan={6}><div className="adm-empty"><div className="adm-empty-icon"><FiCreditCard /></div><div className="adm-empty-title">No donations found</div></div></td></tr>
                           ) : filteredDonations.map(d => (
                             <tr key={d.id}>
                               <td style={{ fontSize: '0.8rem', color: '#94a3b8' }}>{fmtTime(d.created_at)}</td>
@@ -1141,7 +1273,7 @@ export default function AdminDashboardPage() {
                               <td style={{ fontWeight: 700, color: '#10b981' }}>{fmtMoney(d.amount)}</td>
                               <td><Badge status={d.status} /></td>
                               <td style={{ textAlign: 'right' }}>
-                                <button className="adm-btn danger xs" onClick={() => handleDeleteDonation(d.id)} disabled={actionLoading === `del-don-${d.id}`}>🗑️</button>
+                                <button className="adm-btn danger xs" onClick={() => handleDeleteDonation(d.id)} disabled={actionLoading === `del-don-${d.id}`}><FiTrash2 /></button>
                               </td>
                             </tr>
                           ))}
@@ -1154,9 +1286,9 @@ export default function AdminDashboardPage() {
 
               {/* ══ BROADCAST ═══════════════════════════════════ */}
               {tab === 'broadcast' && (
-                <div className="adm-animate" style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '18px', alignItems: 'start' }}>
+                <div className="adm-animate adm-grid-broadcast">
                   <div className="adm-card">
-                    <div className="adm-card-header"><span className="adm-card-title">📧 Compose Broadcast</span></div>
+                    <div className="adm-card-header"><span className="adm-card-title"><FiMail /> Compose Broadcast</span></div>
                     <div className="adm-card-body">
                       <div className="adm-form-group">
                         <label className="adm-label">Audience</label>
@@ -1169,7 +1301,7 @@ export default function AdminDashboardPage() {
                       </div>
                       <div className="adm-form-group">
                         <label className="adm-label">Subject Line</label>
-                        <input className="adm-input" placeholder="e.g. Important Update from {platformName}" value={broadcastSubject} onChange={e => setBroadcastSubject(e.target.value)} />
+                        <input className="adm-input" placeholder={`e.g. Important Update from ${platformName}`} value={broadcastSubject} onChange={e => setBroadcastSubject(e.target.value)} />
                       </div>
                       <div className="adm-form-group">
                         <label className="adm-label">Email Body (HTML)</label>
@@ -1182,13 +1314,13 @@ export default function AdminDashboardPage() {
                       </div>
                       <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
                         <button className="adm-btn primary" onClick={handleSendBroadcast} disabled={actionLoading === 'broadcast'}>
-                          {actionLoading === 'broadcast' ? '⏳ Sending…' : '🚀 Send Broadcast'}
+                          {actionLoading === 'broadcast' ? '⏳ Sending…' : <><FiSend /> Send Broadcast</>}
                         </button>
                         <button className="adm-btn secondary" onClick={handleTestEmail} disabled={actionLoading === 'test-email'}>
-                          🧪 Test Email
+                          <FiRefreshCw /> Test Email
                         </button>
                         <button className="adm-btn ghost" onClick={handleExportEmails} disabled={actionLoading === 'export'}>
-                          📥 Export CSV
+                          <FiDownload /> Export CSV
                         </button>
                       </div>
                     </div>
@@ -1218,19 +1350,28 @@ export default function AdminDashboardPage() {
                 <div className="adm-animate" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '18px', alignItems: 'start' }}>
                   <div className="adm-card">
                     <div className="adm-card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span className="adm-card-title">📄 Page Manager</span>
+                      <span className="adm-card-title"><FiLayout /> Page Manager</span>
                       <button className="adm-btn primary sm" onClick={() => {
-                        const newPage = window.prompt("Enter new page title (e.g., FAQ):");
-                        if (!newPage) return;
-                        const slug = 'page_' + newPage.toLowerCase().replace(/[^a-z0-9]+/g, '_');
-                        if (settings.find(s => s.setting_key === slug)) {
-                          alert('Page already exists!');
-                          return;
-                        }
-                        setSelectedPage(slug);
-                        setPageContent('');
-                        setSettings([...settings, { setting_key: slug, display_value: '' }]);
-                      }}>+ Add New Page</button>
+                        setPromptDialog({
+                          open: true,
+                          title: 'Add New Page',
+                          message: 'Enter new page title (e.g., FAQ):',
+                          placeholder: 'e.g. FAQ',
+                          submitText: 'Create Page',
+                          onSubmit: (newPage) => {
+                            setPromptDialog(prev => ({ ...prev, open: false }));
+                            if (!newPage) return;
+                            const slug = 'page_' + newPage.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+                            if (settings.find(s => s.setting_key === slug)) {
+                              alert('Page already exists!');
+                              return;
+                            }
+                            setSelectedPage(slug);
+                            setPageContent('');
+                            setSettings([...settings, { setting_key: slug, display_value: '' }]);
+                          }
+                        });
+                      }}><FiPlus /> Add New Page</button>
                     </div>
                     <div className="adm-card-body">
                       <div className="adm-form-group">
@@ -1245,7 +1386,7 @@ export default function AdminDashboardPage() {
                       </div>
                       <ReactQuill theme="snow" value={pageContent} onChange={setPageContent} style={{ background: '#fff', borderRadius: '9px', minHeight: '300px' }} />
                       <button className="adm-btn primary" style={{ marginTop: '14px' }} onClick={handlePageSave} disabled={actionLoading === 'save-page'}>
-                        {actionLoading === 'save-page' ? '⏳ Saving…' : '💾 Save Page'}
+                        {actionLoading === 'save-page' ? '⏳ Saving…' : <><FiSave /> Save Page</>}
                       </button>
                       <div style={{ marginTop: '16px', color: 'var(--text-muted)', fontSize: '0.9em' }}>
                         Public Link: <a href={`/p/${selectedPage.replace('page_', '')}`} target="_blank" rel="noopener noreferrer">/p/{selectedPage.replace('page_', '')}</a>
@@ -1256,11 +1397,11 @@ export default function AdminDashboardPage() {
               )}
 
               {tab === 'settings' && (
-                <div className="adm-animate" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px', alignItems: 'start' }}>
+                <div className="adm-animate adm-grid-2">
 
                   {/* Platform Settings */}
                   <div className="adm-card">
-                    <div className="adm-card-header"><span className="adm-card-title">⚙️ Platform Settings</span></div>
+                    <div className="adm-card-header"><span className="adm-card-title"><FiSettings /> Platform Settings</span></div>
                     <div className="adm-card-body">
                       {settings.filter(s => !s.setting_key.startsWith('page_')).map(s => (
                         <SettingField key={s.setting_key} setting={s} onSave={handleSettingUpdate} />
@@ -1268,7 +1409,7 @@ export default function AdminDashboardPage() {
                       <div style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid #e2e8f0' }}>
                         <p style={{ margin: '0 0 10px', fontSize: '13px', color: '#64748b' }}>Test your current SMTP configuration by sending a test email.</p>
                         <button className="adm-btn secondary" onClick={handleTestEmail} disabled={actionLoading === 'test-email'}>
-                          {actionLoading === 'test-email' ? 'Sending...' : '🧪 Send Test Email'}
+                          {actionLoading === 'test-email' ? 'Sending...' : <><FiRefreshCw /> Send Test Email</>}
                         </button>
                       </div>
                     </div>
@@ -1276,7 +1417,7 @@ export default function AdminDashboardPage() {
 
                   {/* Admin Profile */}
                   <div className="adm-card">
-                    <div className="adm-card-header"><span className="adm-card-title">👤 Admin Profile</span></div>
+                    <div className="adm-card-header"><span className="adm-card-title"><FiUsers /> Admin Profile</span></div>
                     <div className="adm-card-body">
                       <form onSubmit={handleProfileUpdate}>
                         <div className="adm-form-group">
@@ -1291,7 +1432,7 @@ export default function AdminDashboardPage() {
                           <label className="adm-label">New Password</label>
                           <input className="adm-input" type="password" placeholder="Leave blank to keep current" value={profileData.newPassword} onChange={e => setProfileData(p => ({ ...p, newPassword: e.target.value }))} />
                         </div>
-                        <button type="submit" className="adm-btn primary" disabled={profileLoading}>{profileLoading ? '⏳ Saving…' : '💾 Update Profile'}</button>
+                        <button type="submit" className="adm-btn primary" disabled={profileLoading}>{profileLoading ? '⏳ Saving…' : <><FiSave /> Update Profile</>}</button>
                       </form>
                     </div>
                   </div>
@@ -1303,13 +1444,16 @@ export default function AdminDashboardPage() {
         </main>
       </div>
 
+      <ConfirmDialog {...confirmDialog} onCancel={() => setConfirmDialog(prev => ({ ...prev, open: false }))} />
+      <PromptDialog {...promptDialog} onCancel={() => setPromptDialog(prev => ({ ...prev, open: false }))} />
+
       {/* ── Ban Modal ── */}
       {showBanModal && (
         <div className="adm-modal-overlay" onClick={() => setShowBanModal(false)}>
           <div className="adm-modal" onClick={e => e.stopPropagation()}>
             <div className="adm-modal-header">
-              <span className="adm-modal-title">🚫 Ban User — {selectedUserName}</span>
-              <button className="adm-modal-close" onClick={() => setShowBanModal(false)}>×</button>
+              <span className="adm-modal-title"><FiSlash /> Ban User — {selectedUserName}</span>
+              <button className="adm-modal-close" onClick={() => setShowBanModal(false)}><FiX /></button>
             </div>
             <form onSubmit={handleUserBan}>
               <div className="adm-modal-body">
@@ -1334,7 +1478,7 @@ export default function AdminDashboardPage() {
               <div className="adm-modal-footer">
                 <button type="button" className="adm-btn ghost" onClick={() => setShowBanModal(false)}>Cancel</button>
                 <button type="submit" className="adm-btn danger" disabled={actionLoading === `user-ban-${selectedUserId}`}>
-                  {actionLoading === `user-ban-${selectedUserId}` ? '⏳ Banning…' : '🚫 Ban User'}
+                  {actionLoading === `user-ban-${selectedUserId}` ? '⏳ Banning…' : <><FiSlash /> Ban User</>}
                 </button>
               </div>
             </form>
@@ -1347,8 +1491,8 @@ export default function AdminDashboardPage() {
         <div className="adm-modal-overlay" onClick={() => setAddFundsModal(p => ({ ...p, open: false }))}>
           <div className="adm-modal" onClick={e => e.stopPropagation()}>
             <div className="adm-modal-header">
-              <span className="adm-modal-title">💵 Adjust Balance — {addFundsModal.userName}</span>
-              <button className="adm-modal-close" onClick={() => setAddFundsModal(p => ({ ...p, open: false }))}>×</button>
+              <span className="adm-modal-title"><FiDollarSign /> Adjust Balance — {addFundsModal.userName}</span>
+              <button className="adm-modal-close" onClick={() => setAddFundsModal(p => ({ ...p, open: false }))}><FiX /></button>
             </div>
             <form onSubmit={submitAddUserFunds}>
               <div className="adm-modal-body">
@@ -1356,11 +1500,11 @@ export default function AdminDashboardPage() {
                   <div style={{ display: 'flex', gap: '12px' }}>
                     <label style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', padding: '10px', border: `2px solid ${addFundsModal.actionType === 'add' ? '#10b981' : '#e2e8f0'}`, borderRadius: '9px' }}>
                       <input type="radio" name="at" value="add" checked={addFundsModal.actionType === 'add'} onChange={() => setAddFundsModal(p => ({ ...p, actionType: 'add' }))} />
-                      <strong style={{ color: '#10b981' }}>➕ Add Funds</strong>
+                      <strong style={{ color: '#10b981', display: 'flex', alignItems: 'center', gap: '4px' }}><FiPlus /> Add Funds</strong>
                     </label>
                     <label style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', padding: '10px', border: `2px solid ${addFundsModal.actionType === 'subtract' ? '#ef4444' : '#e2e8f0'}`, borderRadius: '9px' }}>
                       <input type="radio" name="at" value="subtract" checked={addFundsModal.actionType === 'subtract'} onChange={() => setAddFundsModal(p => ({ ...p, actionType: 'subtract' }))} />
-                      <strong style={{ color: '#ef4444' }}>➖ Subtract</strong>
+                      <strong style={{ color: '#ef4444', display: 'flex', alignItems: 'center', gap: '4px' }}><FiMinus /> Subtract</strong>
                     </label>
                   </div>
                 </div>
@@ -1397,8 +1541,8 @@ export default function AdminDashboardPage() {
         <div className="adm-modal-overlay" onClick={() => setPreviewDocument(null)}>
           <div style={{ background: '#fff', borderRadius: '16px', width: '100%', maxWidth: '800px', maxHeight: '90vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }} onClick={e => e.stopPropagation()}>
             <div style={{ padding: '16px 20px', background: '#f8fafc', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e2e8f0' }}>
-              <strong style={{ fontFamily: 'var(--font-display)', color: '#0f172a' }}>📄 Document Preview</strong>
-              <button className="adm-btn secondary sm" onClick={() => setPreviewDocument(null)}>Close ×</button>
+              <strong style={{ fontFamily: 'var(--font-display)', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}><FiFileText /> Document Preview</strong>
+              <button className="adm-btn secondary sm" onClick={() => setPreviewDocument(null)}>Close <FiX /></button>
             </div>
             <div style={{ flex: 1, overflow: 'auto', padding: '24px', display: 'flex', justifyContent: 'center', background: '#f8fafc' }}>
               {previewDocument.startsWith('data:application/pdf') ? (

@@ -1,7 +1,7 @@
 {
-  "name": "donatefit-server",
+  "name": "altruwave-server",
   "version": "1.0.0",
-  "description": "Backend API for DonateFit fitness crowdfunding platform",
+  "description": "Backend API for AltruWave crowdfunding platform",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",

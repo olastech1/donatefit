@@ -1,5 +1,5 @@
 -- ============================================================
--- DONATEFIT — Neon PSQL Schema (Stripe Edition)
+-- ALTRUWAVE — Neon PSQL Schema (Stripe Edition)
 -- A general crowdfunding platform
 -- ============================================================
 
