@@ -89,8 +89,9 @@ const requestWithdrawal = async (req, res) => {
       });
     }
 
-    const fee = parseFloat((parsedAmount * 0.01).toFixed(2));
-    const netAmount = parsedAmount - fee;
+    // Platform fee already deducted at donation time — no additional withdrawal fee
+    const fee = 0;
+    const netAmount = parsedAmount;
 
     const result = await pool.query(
       `INSERT INTO withdrawals (

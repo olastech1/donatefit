@@ -223,19 +223,19 @@ CREATE TRIGGER set_campaigns_updated_at
     BEFORE UPDATE ON campaigns
     FOR EACH ROW EXECUTE FUNCTION update_modified_column();
 
--- Auto-update campaign.current_amount on donation success
+-- Auto-update campaign.current_amount on donation success (net of platform fee)
 CREATE OR REPLACE FUNCTION update_campaign_total()
 RETURNS TRIGGER AS $$
 BEGIN
     IF NEW.status = 'success' AND (OLD.status IS NULL OR OLD.status != 'success') THEN
         UPDATE campaigns
-        SET current_amount = current_amount + NEW.amount
+        SET current_amount = current_amount + (NEW.amount - COALESCE(NEW.platform_fee, 0))
         WHERE id = NEW.campaign_id;
     END IF;
 
     IF NEW.status = 'refunded' AND OLD.status = 'success' THEN
         UPDATE campaigns
-        SET current_amount = current_amount - NEW.amount
+        SET current_amount = current_amount - (NEW.amount - COALESCE(NEW.platform_fee, 0))
         WHERE id = NEW.campaign_id;
     END IF;
 
