@@ -544,7 +544,7 @@ export default function AdminDashboardPage() {
         setPromptDialog(prev => ({ ...prev, open: false }));
         if (!email) return;
         setActionLoading('test-email');
-        try { await adminAPI.testEmail({ to: email }); setMessage({ type: 'success', text: `Test email sent to ${email}.` }); }
+        try { await adminAPI.testEmail({ to: email }); setMessage({ type: 'success', text: `Test email sent to ${email}. (Please check your spam folder).` }); }
         catch (err) { setMessage({ type: 'error', text: err.response?.data?.message || 'Failed to send test email.' }); }
         finally { setActionLoading(null); }
       }

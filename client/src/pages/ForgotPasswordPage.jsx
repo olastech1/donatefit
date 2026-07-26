@@ -13,7 +13,7 @@ export default function ForgotPasswordPage() {
     setMessage({ type: '', text: '' });
     try {
       const res = await authAPI.forgotPassword({ email });
-      setMessage({ type: 'success', text: res.data.message });
+      setMessage({ type: 'success', text: res.data.message + " (Please check your spam folder)." });
       setEmail('');
     } catch (err) {
       setMessage({ type: 'error', text: err.response?.data?.message || 'Something went wrong.' });

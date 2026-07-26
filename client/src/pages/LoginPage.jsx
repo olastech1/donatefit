@@ -101,11 +101,11 @@ export default function LoginPage() {
                 <FiMail size={20} /> Email not verified
               </div>
               <p style={{ fontSize: '0.9rem', margin: 0 }}>
-                Check your inbox at <strong>{unverifiedEmail}</strong> for the verification link.
+                Check your inbox at <strong>{unverifiedEmail}</strong> for the verification link. (Please check your spam folder).
               </p>
               {resent ? (
                 <div style={{ color: 'var(--success)', fontWeight: 600, fontSize: '0.9rem', display: 'flex', gap: '4px', alignItems: 'center' }}>
-                  <FiCheckCircle /> Verification email resent!
+                  <FiCheckCircle /> Verification email resent! (Check your spam folder)
                 </div>
               ) : (
                 <button

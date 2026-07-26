@@ -80,12 +80,12 @@ export default function RegisterPage() {
               {email}
             </p>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '32px', lineHeight: 1.6 }}>
-              Click the link in the email to activate your account.<br/>The link expires in 24 hours.
+              Click the link in the email to activate your account.<br/>The link expires in 24 hours. (Please check your spam folder if you don't see it).
             </p>
 
             {resent ? (
               <div className="alert alert-success flex-center mb-4">
-                <FiCheckCircle size={20} /> A new verification email has been sent!
+                <FiCheckCircle size={20} /> A new verification email has been sent! (Check your spam folder)
               </div>
             ) : (
               <button
